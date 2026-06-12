@@ -17,16 +17,16 @@ VentureDial is a purpose-built outbound/inbound calling platform for Venture Hom
 
 | Area | Features |
 |---|---|
-| Dialing | Adaptive power dial, AMD, local presence, abandon-rate guard (3% TCPA cap), number health + auto-rotation (≤75 dials/day/number), persistent callbacks |
+| Dialing | Adaptive power dial, AMD, local presence, abandon-rate guard (3% TCPA cap), number health + auto-rotation (≤75 dials/day/number), persistent callbacks, one-click number registration (10DLC + CNAM), branded caller ID with verified business display |
 | Lead flow | Salesforce list/campaign pull (60s sync), LeadConduit real-time webhook, speed-to-lead queue-jump with countdown, TrustedForm consent display, dedupe + list hygiene |
 | AI | Pre-call brief, live transcription, post-call summary auto-logged to CRM, AI-suggested disposition, call scoring, coaching tips, sentiment |
 | SMS | Two-way threads beside dialer, templates, 10DLC, auto-STOP, simulated drip |
 | Inbound | Multiple ring groups → teams (simultaneous / round-robin / longest-idle), source identification on screen-pop, Salesforce attribution |
-| Manager | Live salesfloor (25 agents), inactivity alerts (15 min → coral + Google Chat), listen/whisper/barge with live transcript + sentiment, Performance Pulse vs 7-day baseline, AI coaching feed, leaderboard |
+| Manager | Live salesfloor (25 agents), inactivity alerts (15 min → coral + Google Chat), listen/whisper/barge with live transcript + sentiment, Performance Pulse vs 7-day baseline, AI coaching feed, lead-source over/under-baseline alerts, leaderboards (appointments + most calls) |
 | Compliance | DNC scrub (nightly + pre-dial + internal list), per-state calling windows (editable, auto-enforced), recording disclosure, abandon throttle, consent storage |
-| Ops | Lead source performance, ring group config, state script builder with merge fields, compliance center |
+| Ops | Lead source performance, ring group config, state script builder with merge fields, AI Script Lab (proposes + A/B tests script changes from call outcomes — continuously self-improving), per-user-type disposition sets, number registration & branding, compliance center |
 | CX | Unified voice+SMS inbox, customer journey board, screen-pop with install stage/tickets, AI proactive-outreach suggestions |
-| Other | Role-based portals, gamification (XP/streaks/badges/team battle/confetti), home aerial map popup, one-click integrations, in-app help center with Ask-AI |
+| Other | Role-based portals, gamification (XP/streaks/badges/team battle/confetti), live satellite view of lead's home, one-click warm/blind transfers (agent/team/CX/manager, transcript follows), one-click integrations, in-app help center with Ask-AI |
 
 ---
 
@@ -45,7 +45,7 @@ VentureDial is a purpose-built outbound/inbound calling platform for Venture Hom
 | Transcription | Deepgram (real-time) | ~$0.0059/min. Twilio native as fallback. |
 | AI | **Claude API** | Summaries, scoring, coaching, pre-call briefs, ask-AI help. ~$0.01–0.03/call. |
 | Queueing/pacing | Cloud Tasks + Cloud Scheduler | Dial pacing, list syncs, nightly DNC scrub jobs. |
-| CRM | Salesforce REST API | List/campaign pull, activity + AI summary writeback, attribution. |
+| CRM | Salesforce REST API (first adapter) | CRM-agnostic adapter layer: all CRM traffic through one interface (list pull, activity/summary writeback, dispositions). The in-house custom CRM connects via the same REST + webhook contract — swap the adapter, dialer unchanged. |
 | Lead delivery | ActiveProspect LeadConduit webhook + TrustedForm API | Speed-to-lead pipeline, consent certificates. |
 | DNC | DNC.com or PossibleNOW API | Import scrub + cached pre-dial check. FTC SAN subscription required. |
 | Alerts | Google Chat webhooks | Already proven in venture-payroll-agent. |
@@ -71,11 +71,11 @@ GCS (recordings)  Deepgram→Claude  React app (agent/mgr/cx/ops portals)
 - [ ] TCPA / state mini-TCPA counsel review (solar outbound is a litigation magnet)
 - [ ] Twilio account, number pool purchase (local presence per state), Salesforce Connected App, LeadConduit webhook credentials
 
-**Phase 1 — Working dialer (weeks 1–4).** Browser softphone, Salesforce list pull, power dial with DNC scrub + calling-window enforcement, recording to GCS, dispositions, basic SMS, callback scheduling. *Exit: 2–3 agents piloting daily alongside Five9.*
+**Phase 1 — Working dialer (weeks 1–4).** Browser softphone, Salesforce list pull, power dial with DNC scrub + calling-window enforcement, **no-pause connect architecture** (zero dead air on answer — per coverage audit, the #1 connect-rate killer), recording to GCS, dispositions, basic SMS, callback scheduling. *Exit: 2–3 agents piloting daily alongside Five9.*
 
 **Phase 2 — Differentiators (weeks 5–8).** LeadConduit speed-to-lead queue-jump; real-time transcription → AI summaries/scoring → Salesforce writeback; pre-call briefs; ring groups with source tags; manager salesfloor with listen/whisper/barge; inactivity alerts to Google Chat. *Exit: half the floor migrated.*
 
-**Phase 3 — Moat + polish (weeks 9–12).** Number health engine (rotation, spam monitoring via Free Caller Registry/Numeracle); state script builder; gamification; CX inbox; Performance Pulse + AI coaching feed; help center. *Exit: full cutover, Five9 cancelled.*
+**Phase 3 — Moat + polish (weeks 9–12).** Number health engine (rotation, spam monitoring via Free Caller Registry/Numeracle, managed remediation workflow); number registration + branded calling pipeline; state script builder + AI Script Lab; QM rubric scoring of 100% of calls; gamification; CX inbox; Performance Pulse + AI coaching feed; help center. *Exit: full cutover, Five9 cancelled.* (Phase 4 candidates from coverage audit: fully blended inbound/outbound queue, cadence engine — see docs/COVERAGE_AUDIT.md.)
 
 ---
 
@@ -95,7 +95,7 @@ GCS (recordings)  Deepgram→Claude  React app (agent/mgr/cx/ops portals)
 - **Voicemail drop:** one click plays a pre-recorded VM while the agent moves to the next dial — saves ~30 sec on every VM (PhoneBurner's most-loved feature).
 - **Missed-call instant text-back:** any unanswered inbound gets an automatic SMS within seconds ("Sorry we missed you — reply 1 for a callback"). Recovers calls that would never redial.
 - **Best-time-to-call ML:** per-lead attempt scheduling learned from answer history (Derek answers after 5pm → the queue knows). Lift compounds with local presence.
-- **Branded caller ID (CNAM + Truecaller-style verification):** display "Venture Home Solar" with a verified checkmark on recipients' phones — the next frontier after spam-flag avoidance.
+- **Branded caller ID (CNAM + verification):** display "Venture Home Solar" with a verified checkmark on recipients' phones — **now in the prototype** (Ops portal: registration wizard + branding status table); production via Twilio Branded Calling / First Orion.
 - **Weather/rate-event triggers:** utility rate-case approvals or outage events in a service area auto-spin a campaign with matching scripts ("Con Ed +9.2% just approved").
 
 **Conversion & revenue**

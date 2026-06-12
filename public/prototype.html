@@ -496,6 +496,20 @@ td{padding:8px;border-bottom:1px solid var(--line);font-family:var(--mono);font-
         </div>
       </div>
       <div class="card" style="margin-top:14px">
+        <h3>Number Registration & Branded Calling <span class="right mono muted">one-click provisioning</span></h3>
+        <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center">
+          <button class="btn amber sm" onclick="toast('New number wizard: pick area code → auto-registers 10DLC + CNAM + branded ID → live in ~3–5 days')">+ Register new number</button>
+          <span class="small muted">buys the DID, files 10DLC + CNAM, submits branded-calling verification — one flow, no carrier paperwork</span>
+        </div>
+        <table><thead><tr><th>Number</th><th>CNAM display</th><th>10DLC</th><th>Branded ID</th><th>STIR/SHAKEN</th></tr></thead><tbody>
+          <tr><td>(603) 555-7301</td><td>VENTURE HOME SOLAR</td><td><span class="tag teal">✓ registered</span></td><td><span class="tag teal">✓ verified — logo + name shows</span></td><td><span class="tag teal">A attest.</span></td></tr>
+          <tr><td>(603) 555-7400</td><td>VENTURE HOME SOLAR</td><td><span class="tag teal">✓ registered</span></td><td><span class="tag teal">✓ verified</span></td><td><span class="tag teal">A attest.</span></td></tr>
+          <tr><td>(914) 555-7310</td><td>VENTURE HOME SOLAR</td><td><span class="tag teal">✓ registered</span></td><td><span class="tag amber">pending review (2d)</span></td><td><span class="tag teal">A attest.</span></td></tr>
+          <tr><td>(603) 555-7303</td><td>— spare</td><td><span class="tag teal">✓ registered</span></td><td><span class="tag amber">queued</span></td><td><span class="tag teal">A attest.</span></td></tr>
+        </tbody></table>
+        <div class="compliance">branded display ("Venture Home Solar" + checkmark on recipient phones) lifts answer rates and is the next step beyond spam avoidance · auto-renews · new spares inherit branding</div>
+      </div>
+      <div class="card" style="margin-top:14px">
         <h3>Disposition Sets — per user type <span class="right mono muted">what agents see at wrap-up</span></h3>
         <table><thead><tr><th>User type</th><th>Dispositions</th><th></th></tr></thead><tbody>
           <tr><td>Sales agent</td><td style="font-size:10.5px">Callback set · Send estimate · Not interested · No answer · Voicemail · Wrong number · Do not call · Other</td><td><button class="btn ghost sm" onclick="toast('Disposition editor opened')">edit</button></td></tr>

@@ -7,7 +7,7 @@ Prepared June 11, 2026 · Status: prototype complete, ready to scaffold
 
 ## 1. Product Summary
 
-VentureDial is a purpose-built outbound/inbound calling platform for Venture Home Solar's 25-agent remote inside sales team, with dedicated portals for Managers, Customer Experience, and Operations. It replaces Five9 with a system designed around three principles drawn from competitive research: **contact rate is the product** (Convoso's strength, without its instability), **AI in the loop on every call** (the Nooks/Orum pattern legacy dialers lack), and **a remote salesfloor that manages itself** (live status, inactivity alerts, coaching from anywhere).
+VentureDial is a purpose-built outbound/inbound calling platform for Venture Home Solar's remote team. Two logins — **Agent** and **Manager**. Agents come in three types (Inside Sales, CX, Operations) and every agent gets every tool: the dialer, the CX inbox, and the Ops toolset all live in one workspace, with ring groups routing inbound calls to the right team. It replaces Five9 with a system designed around three principles drawn from competitive research: **contact rate is the product** (Convoso's strength, without its instability), **AI in the loop on every call** (the Nooks/Orum pattern legacy dialers lack), and **a remote salesfloor that manages itself** (live status, inactivity alerts, coaching from anywhere).
 
 **What it does, in one pass:** Leads flow in from Salesforce lists and ActiveProspect LeadConduit in real time — new web leads jump the queue within seconds with a speed-to-lead countdown. Before every dial the system scrubs DNC (federal, state, internal), checks the lead's state calling window, and selects a healthy local-presence caller ID. The agent gets an AI pre-call brief (lead context plus coaching from their own last call) and a state-specific script auto-populated with the lead's data. Every call is recorded and transcribed live; on hangup, AI scores the call, writes the summary to Salesforce, and suggests the disposition. Two-way SMS (10DLC compliant) sits beside the dialer. Inbound calls route through source-tagged ring groups to the right team with full screen-pop. Managers watch a live salesfloor with per-agent performance vs baseline, real-time call sentiment, listen/whisper/barge, and automatic alerts when agents go inactive. Gamification (XP, streaks, goals, team battles) keeps a remote floor energized. An Ops portal owns lead source analytics, routing, scripts, and the compliance center; a CX portal owns the customer-care inbox and journey.
 
@@ -26,7 +26,7 @@ VentureDial is a purpose-built outbound/inbound calling platform for Venture Hom
 | Compliance | DNC scrub (nightly + pre-dial + internal list), per-state calling windows (editable, auto-enforced), recording disclosure, abandon throttle, consent storage |
 | Ops | Lead source performance, ring group config, state script builder with merge fields, AI Script Lab (proposes + A/B tests script changes from call outcomes — continuously self-improving), per-user-type disposition sets, number registration & branding, compliance center |
 | CX | Unified voice+SMS inbox, customer journey board, screen-pop with install stage/tickets, AI proactive-outreach suggestions |
-| Other | Role-based portals, gamification (XP/streaks/badges/team battle/confetti), live satellite view of lead's home, one-click warm/blind transfers (agent/team/CX/manager, transcript follows), one-click integrations, in-app help center with Ask-AI |
+| Other | Two-login model (Agent + Manager) with three agent types sharing all tools, gamification (XP/streaks/badges/team battle/confetti), live satellite view of lead's home, one-click warm/blind transfers (agent/team/CX/manager, transcript follows), one-click integrations, in-app help center with Ask-AI |
 
 ---
 
@@ -138,7 +138,7 @@ vs. Five9/Convoso at 25 seats: typically $3,000–8,000+/mo before AI add-ons. P
 > Also shipped in-app: the **? help button** (bottom-right) has searchable, screen-aware help and an Ask-AI box. This section is the trainer's version.
 
 ### 5.1 Signing in & roles
-Open VentureDial and pick your workspace: **Agent**, **Manager**, **CX**, or **Ops**. Same data, different job. You can switch anytime via the role chip (top-left).
+Two logins: **Agent** or **Manager**. Agents pick their team at sign-in — **Inside Sales**, **CX**, or **Operations** — which sets their default tab and disposition set, but every agent can use every tool (Dialer, CX Inbox, Operations, Integrations tabs). Switch anytime via the role chip (top-left).
 
 ### 5.2 Agent Workspace — a shift in 8 steps
 1. **Check your goals** (left panel): daily rings for dials, connects, appointments. Streaks and badges track above your queue.
@@ -161,10 +161,10 @@ Open VentureDial and pick your workspace: **Agent**, **Manager**, **CX**, or **O
 - **AI Coaching Feed:** acts as your triage list — "whisper in," "send tip," "assign roleplay" are one click.
 - **Daily rhythm:** scan KPIs (answer rate, abandon vs 3% cap, speed-to-lead, inactive count) → handle coral flags → one live-listen per team per day minimum.
 
-### 5.4 CX Portal
+### 5.4 CX tools (a tab in every agent workspace)
 Unified Inbox holds every customer call and text from the Care line, urgency-sorted. Open a thread for full history (calls, recordings, AI summaries, install stage, tickets). The Journey board shows where every customer sits (consult → contract → install → service). Act on AI suggestions — pre-empting install-delay calls with a text beats answering them.
 
-### 5.5 Ops Portal
+### 5.5 Operations tools (a tab in every agent workspace)
 - **Lead Source Performance:** kill or refresh aging lists (watch contact % and median speed-to-lead per source).
 - **Ring Groups:** add/edit inbound lines, source tags, team routing, ring strategy.
 - **State Scripts:** edit per-state scripts with merge fields; Save pushes live to all agents instantly.

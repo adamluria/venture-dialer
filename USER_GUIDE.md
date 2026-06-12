@@ -4,7 +4,7 @@ Living user-facing reference. Full training manual: `docs/BUILD_PLAN.md` §5. In
 
 ## Roles
 
-Pick your workspace at sign-in: **Agent**, **Manager**, **CX**, or **Ops**. Switch via the role chip (top-left).
+Two logins: **Agent** or **Manager**. Agents pick their team at sign-in — **Inside Sales**, **CX**, or **Operations**. That sets your default tab and disposition set, but every agent has every tool: Dialer, CX Inbox, Operations, and Integrations tabs. Switch via the role chip (top-left).
 
 ## Agent (quick card)
 

@@ -568,12 +568,15 @@ td{padding:8px;border-bottom:1px solid var(--line);font-family:var(--mono);font-
   <div class="lwrap">
     <div class="logo" style="justify-content:center;margin-bottom:14px"><span class="mark">☀</span>Venture<span>Dial</span></div>
     <div class="lt">Who's signing in?</div>
-    <div class="ls">Each team gets its own workspace — same data, different job.</div>
+    <div class="ls">Two logins. Agents pick their team — every agent gets every tool.</div>
     <div class="rolecards">
-      <div class="rolecard" onclick="setMode('agent')"><div class="ri">🎧</div><div class="rn">Agent Workspace</div><div class="rd">Dialer, AI copilot, SMS, goals & XP</div></div>
-      <div class="rolecard" onclick="setMode('mgr')"><div class="ri">🛡</div><div class="rn">Manager Portal</div><div class="rd">Live salesfloor, listen/whisper/barge, alerts, ring groups</div></div>
-      <div class="rolecard" onclick="setMode('cx')"><div class="ri">💬</div><div class="rn">CX Portal</div><div class="rd">Unified inbox, care line, customer journey</div></div>
-      <div class="rolecard" onclick="setMode('ops')"><div class="ri">⚙️</div><div class="rn">Ops Portal</div><div class="rd">Lead sources, routing, DNC & compliance, list hygiene</div></div>
+      <div class="rolecard" style="cursor:default"><div class="ri">🎧</div><div class="rn">Agent Workspace</div><div class="rd" style="margin-bottom:12px">Dialer, AI copilot, SMS, CX inbox & Ops tools — all of it, for every agent type</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn amber" onclick="setMode('agent','is')">📞 Inside Sales</button>
+          <button class="btn ghost" onclick="setMode('agent','cx')">💬 Customer Experience</button>
+          <button class="btn ghost" onclick="setMode('agent','ops')">⚙️ Operations</button>
+        </div></div>
+      <div class="rolecard" onclick="setMode('mgr')"><div class="ri">🛡</div><div class="rn">Manager Portal</div><div class="rd">Live salesfloor, listen/whisper/barge, Performance Pulse, alerts, ring groups, compliance oversight</div></div>
     </div>
   </div>
 </div>
@@ -1117,21 +1120,23 @@ function setView(v){
  if(v==='mgr')renderMgr();
  if(v==='int')renderInt();
 }
-function setMode(m){
+let agentType='is';
+function setMode(m,sub){
  mode=m;$('launcher').style.display='none';
- const tabs={mgr:[['mgr','Salesfloor'],['cx','CX'],['ops','Operations'],['int','Integrations']],
-             cx:[['cx','CX Inbox'],['mgr','Salesfloor'],['int','Integrations']],
-             ops:[['ops','Operations'],['mgr','Salesfloor'],['int','Integrations']]};
+ const mk=t=>t.map(x=>`<button data-v="${x[0]}" onclick="setView('${x[0]}')">${x[1]}</button>`).join('');
  if(m==='agent'){
-  $('roleTabs').innerHTML='';
+  agentType=sub||agentType;
+  CURRENT_ROLE_TYPE=agentType==='cx'?'cx-agent':'sales-agent';
   $('xpwrap').style.display='flex';
-  $('roleLabel').innerHTML='🎧 <b>Agent Workspace</b>&nbsp;· switch';
-  setView('agent');
+  $('roleTabs').innerHTML=mk([['agent','Dialer'],['cx','CX Inbox'],['ops','Operations'],['int','Integrations']]);
+  const names={is:'Inside Sales',cx:'CX',ops:'Ops'};
+  $('roleLabel').innerHTML='🎧 <b>Agent · '+names[agentType]+'</b>&nbsp;· switch';
+  setView(agentType==='cx'?'cx':agentType==='ops'?'ops':'agent');
  }else{
   $('xpwrap').style.display='none';
-  $('roleTabs').innerHTML=tabs[m].map(x=>`<button data-v="${x[0]}" onclick="setView('${x[0]}')">${x[1]}</button>`).join('');
-  $('roleLabel').innerHTML=(m==='mgr'?'🛡 <b>Manager Portal</b>':m==='cx'?'💬 <b>CX Portal</b>':'⚙️ <b>Ops Portal</b>')+'&nbsp;· switch';
-  setView(tabs[m][0][0]);
+  $('roleTabs').innerHTML=mk([['mgr','Salesfloor'],['cx','CX'],['ops','Operations'],['int','Integrations']]);
+  $('roleLabel').innerHTML='🛡 <b>Manager Portal</b>&nbsp;· switch';
+  setView('mgr');
  }
 }
 function openLauncher(){$('launcher').style.display='grid'}
@@ -1164,7 +1169,7 @@ setInterval(()=>{
 // inbound call arrives ~40s after entering agent workspace (when idle)
 let agentModeAt=null;
 const _origSetMode=setMode;
-setMode=function(m){if(m==='agent'&&!agentModeAt)agentModeAt=Date.now();_origSetMode(m)};
+setMode=function(m,sub){if(m==='agent'&&!agentModeAt)agentModeAt=Date.now();_origSetMode(m,sub)};
 setInterval(()=>{
  if(!inboundFired&&mode==='agent'&&phase==='idle'&&agentModeAt&&Date.now()-agentModeAt>40000){inboundFired=true;simulateInbound();}
 },4000);

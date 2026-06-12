@@ -22,7 +22,7 @@ VentureDial is a purpose-built outbound/inbound calling platform for Venture Hom
 | AI | Pre-call brief, live transcription, post-call summary auto-logged to CRM, AI-suggested disposition, call scoring, coaching tips, sentiment |
 | SMS | Two-way threads beside dialer, templates, 10DLC, auto-STOP, simulated drip |
 | Inbound | Multiple ring groups → teams (simultaneous / round-robin / longest-idle), source identification on screen-pop, Salesforce attribution |
-| Manager | Live salesfloor (25 agents), inactivity alerts (15 min → coral + Google Chat), listen/whisper/barge with live transcript + sentiment, Performance Pulse vs 7-day baseline, AI coaching feed, lead-source over/under-baseline alerts, leaderboards (appointments + most calls) |
+| Manager | Live salesfloor (all 50+ agents), inactivity alerts (15 min → coral + Google Chat), listen/whisper/barge with live transcript + sentiment, Performance Pulse vs 7-day baseline, AI coaching feed, lead-source over/under-baseline alerts, leaderboards (appointments + most calls) |
 | Compliance | DNC scrub (nightly + pre-dial + internal list), per-state calling windows (editable, auto-enforced), recording disclosure, abandon throttle, consent storage |
 | Ops | Lead source performance, ring group config, state script builder with merge fields, AI Script Lab (proposes + A/B tests script changes from call outcomes — continuously self-improving), per-user-type disposition sets, number registration & branding, compliance center |
 | CX | Unified voice+SMS inbox, customer journey board, screen-pop with install stage/tickets, AI proactive-outreach suggestions |
@@ -45,7 +45,7 @@ VentureDial is a purpose-built outbound/inbound calling platform for Venture Hom
 | Transcription | Deepgram (real-time) | ~$0.0059/min. Twilio native as fallback. |
 | AI | **Claude API** | Summaries, scoring, coaching, pre-call briefs, ask-AI help. ~$0.01–0.03/call. |
 | Queueing/pacing | Cloud Tasks + Cloud Scheduler | Dial pacing, list syncs, nightly DNC scrub jobs. |
-| CRM | Salesforce REST API (first adapter) | CRM-agnostic adapter layer: all CRM traffic through one interface (list pull, activity/summary writeback, dispositions). The in-house custom CRM connects via the same REST + webhook contract — swap the adapter, dialer unchanged. |
+| CRM | Salesforce REST API (first adapter) | CRM-agnostic adapter layer: all CRM traffic through one interface (list pull, activity/summary writeback, dispositions). **Canopy**, the in-house CRM being built (Salesforce is being phased out), connects via the same REST + webhook contract — swap the adapter, dialer unchanged. |
 | Lead delivery | ActiveProspect LeadConduit webhook + TrustedForm API | Speed-to-lead pipeline, consent certificates. |
 | DNC | DNC.com or PossibleNOW API | Import scrub + cached pre-dial check. FTC SAN subscription required. |
 | Alerts | Google Chat webhooks | Already proven in venture-payroll-agent. |
@@ -118,7 +118,7 @@ GCS (recordings)  Deepgram→Claude  React app (agent/mgr/cx/ops portals)
 
 Recommended sequencing: voicemail drop, text-back, and the show-rate engine first (cheap, immediate ROI), then propensity dialing and the roleplay gym, then the rest as Phase 4+.
 
-### Cost estimate (25 agents, monthly)
+### Cost estimate (50+ agents, monthly)
 
 | Item | Est. |
 |---|---|

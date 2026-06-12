@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VentureDial — Venture Home Solar</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0d14; --panel:#131826; --panel2:#1a2133; --line:#27304a;
+  --text:#eef1f8; --muted:#8e97ad; --dim:#5d6680;
+  --amber:#ffb02e; --amber2:#ff8a00; --amber-bg:rgba(255,176,46,.12);
+  --teal:#2dd4bf; --teal2:#0ea5e9; --teal-bg:rgba(45,212,191,.12);
+  --coral:#ff6b6b; --coral2:#ff3d71; --coral-bg:rgba(255,107,107,.12);
+  --violet:#a78bfa; --blue:#6ea8fe;
+  --mono:'JetBrains Mono',ui-monospace,monospace; --ui:'Outfit',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--ui);font-size:14px;min-height:100vh;
+  background-image:radial-gradient(900px 420px at 15% -10%,rgba(255,138,0,.10),transparent 60%),radial-gradient(800px 400px at 90% -5%,rgba(45,212,191,.08),transparent 55%),radial-gradient(700px 500px at 50% 110%,rgba(167,139,250,.06),transparent 60%)}
+header{display:flex;align-items:center;gap:14px;padding:11px 20px;border-bottom:1px solid var(--line);background:rgba(19,24,38,.85);backdrop-filter:blur(10px);position:sticky;top:0;z-index:50}
+.logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:18px;letter-spacing:.3px}
+.logo .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--amber),var(--amber2));display:grid;place-items:center;font-size:15px;color:#1a1200;box-shadow:0 0 18px rgba(255,176,46,.45)}
+.logo span{background:linear-gradient(90deg,var(--amber),var(--amber2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.sub{color:var(--dim);font-size:11px;margin-left:-4px}
+.toggle{display:flex;background:var(--panel2);border:1px solid var(--line);border-radius:10px;overflow:hidden;padding:3px;gap:3px}
+.toggle button{background:none;border:none;color:var(--muted);padding:7px 16px;font-family:var(--ui);font-size:13px;font-weight:700;cursor:pointer;border-radius:7px;transition:all .2s}
+.toggle button.on{background:linear-gradient(135deg,var(--amber),var(--amber2));color:#1a1200;box-shadow:0 2px 10px rgba(255,176,46,.4)}
+.chip{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;padding:6px 11px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--muted)}
+.chip b{color:var(--text);font-weight:600}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex:none}
+.dot.teal{background:var(--teal);box-shadow:0 0 8px var(--teal)} .dot.coral{background:var(--coral);box-shadow:0 0 8px var(--coral);animation:pulse 1.2s infinite} .dot.amber{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+@keyframes pulse{50%{opacity:.35}}
+.spacer{flex:1}
+.recbadge{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--coral);background:var(--coral-bg);padding:6px 11px;border-radius:8px;border:1px solid rgba(255,107,107,.35)}
+.xpwrap{display:flex;align-items:center;gap:9px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:5px 12px}
+.lvlbadge{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--teal2));display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:12px;box-shadow:0 0 12px rgba(167,139,250,.5)}
+.xpbar{width:110px;height:7px;background:var(--bg);border-radius:4px;overflow:hidden}
+.xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--violet),var(--teal));border-radius:4px;transition:width .6s}
+.xptxt{font-family:var(--mono);font-size:10px;color:var(--muted)}
+main{padding:16px 20px;max-width:1560px;margin:0 auto}
+.grid{display:grid;grid-template-columns:280px 1fr 350px;gap:14px;align-items:start}
+.card{background:linear-gradient(180deg,var(--panel),#111624);border:1px solid var(--line);border-radius:14px;padding:15px;box-shadow:0 6px 24px rgba(0,0,0,.28)}
+.card h3{font-size:11px;text-transform:uppercase;letter-spacing:1.3px;color:var(--muted);margin-bottom:11px;display:flex;align-items:center;gap:8px}
+.card h3 .right{margin-left:auto;text-transform:none;letter-spacing:0;font-size:11px;font-weight:500}
+.btn{border:none;border-radius:9px;padding:10px 18px;font-family:var(--ui);font-weight:700;font-size:13px;cursor:pointer;transition:all .15s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn.amber{background:linear-gradient(135deg,var(--amber),var(--amber2));color:#1a1200;box-shadow:0 3px 14px rgba(255,176,46,.35)}
+.btn.ghost{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+.btn.coral{background:linear-gradient(135deg,var(--coral),var(--coral2));color:#fff;box-shadow:0 3px 14px rgba(255,107,107,.3)}
+.btn.teal{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#04241c}
+.btn.sm{padding:6px 11px;font-size:12px}
+.btn:disabled{opacity:.4;cursor:default;transform:none}
+.mono{font-family:var(--mono)}
+.qitem{padding:10px 11px;border-radius:10px;border:1px solid transparent;margin-bottom:6px}
+.qitem.now{background:var(--amber-bg);border-color:rgba(255,176,46,.4);box-shadow:0 0 16px rgba(255,176,46,.12)}
+.qitem.hot{border-color:var(--amber);animation:hotpulse 1.3s infinite}
+@keyframes hotpulse{50%{box-shadow:0 0 24px rgba(255,176,46,.45)}}
+.srct{font-size:9px;padding:1px 6px;border-radius:4px;font-family:var(--mono);font-weight:600}
+.srct.sf{background:rgba(0,161,224,.16);color:#5ec9f0}
+.srct.ap{background:var(--teal-bg);color:var(--teal)}
+.srcline{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;font-size:10.5px;color:var(--muted);font-family:var(--mono);border-bottom:1px solid var(--line);padding-bottom:9px}
+.stl{display:flex;align-items:center;gap:8px;background:var(--amber-bg);border:1px solid rgba(255,176,46,.45);color:var(--amber);border-radius:10px;padding:9px 13px;margin-bottom:10px;font-weight:700;font-size:13px;animation:hotpulse 1.3s infinite}
+.stl .mono{font-size:16px}
+.consent{font-size:10px;font-family:var(--mono);background:var(--teal-bg);color:var(--teal);padding:2px 8px;border-radius:5px;border:1px solid rgba(45,212,191,.35)}
+.srct.in{background:rgba(167,139,250,.16);color:var(--violet)}
+/* role launcher */
+#launcher{position:fixed;inset:0;background:rgba(8,10,16,.96);backdrop-filter:blur(8px);z-index:300;display:grid;place-items:center}
+.lwrap{text-align:center}
+.lwrap .lt{font-size:30px;font-weight:800;margin-bottom:6px}
+.lwrap .ls{color:var(--muted);margin-bottom:28px}
+.rolecards{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.rolecard{width:225px;padding:26px 20px;border-radius:18px;background:linear-gradient(180deg,var(--panel),#101522);border:1px solid var(--line);cursor:pointer;transition:all .2s;text-align:center}
+.rolecard:hover{transform:translateY(-5px);border-color:var(--amber);box-shadow:0 14px 40px rgba(255,176,46,.15)}
+.rolecard .ri{font-size:34px;margin-bottom:10px}
+.rolecard .rn{font-weight:800;font-size:16px}
+.rolecard .rd{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5}
+/* inbound pop */
+#inboundPop{position:fixed;top:64px;right:22px;width:340px;background:linear-gradient(180deg,#1a2133,#141a2a);border:1px solid var(--violet);border-radius:16px;padding:16px;z-index:150;box-shadow:0 16px 50px rgba(0,0,0,.6),0 0 30px rgba(167,139,250,.2);animation:fadein .3s}
+#inboundPop .ih{display:flex;align-items:center;gap:9px;font-weight:800;font-size:15px;margin-bottom:8px}
+#inboundPop .ringanim{font-size:20px;animation:shake .5s infinite}
+@keyframes shake{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(12deg)}}
+/* map modal */
+#mapModal{position:fixed;inset:0;background:rgba(8,10,16,.8);z-index:250;display:none;place-items:center}
+#mapModal.open{display:grid}
+.mapbox{width:560px;max-width:92vw;background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 20px 70px rgba(0,0,0,.6)}
+.mapbox .mh{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line)}
+.mapfacts{display:flex;gap:8px;padding:12px 16px;flex-wrap:wrap}
+.qitem .nm{font-weight:700;font-size:13px;display:flex;gap:6px;align-items:center}
+.qitem .meta{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:3px}
+.cbitem{padding:9px 11px;border-radius:10px;background:var(--panel2);margin-bottom:6px;border-left:3px solid var(--amber)}
+.cbitem .t{font-family:var(--mono);font-size:11px;color:var(--amber);font-weight:600}
+.statusbar{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.statusbar .state{font-family:var(--mono);font-size:12px;font-weight:700;padding:7px 13px;border-radius:8px}
+.state.idle{background:var(--panel2);color:var(--muted)}
+.state.ringing{background:var(--amber-bg);color:var(--amber);box-shadow:0 0 14px rgba(255,176,46,.25)}
+.state.live{background:var(--teal-bg);color:var(--teal);box-shadow:0 0 14px rgba(45,212,191,.25)}
+.state.wrap{background:var(--coral-bg);color:var(--coral)}
+.timer{font-family:var(--mono);font-size:24px;font-weight:700;margin-left:auto;letter-spacing:1px}
+.leadcard{display:flex;gap:18px;flex-wrap:wrap;padding:16px;background:linear-gradient(135deg,var(--panel2),#161d2e);border-radius:12px;margin-bottom:12px;border:1px solid var(--line)}
+.leadcard .name{font-size:20px;font-weight:800}
+.leadcard .num{font-family:var(--mono);color:var(--blue);font-size:14px}
+.kv .k{color:var(--dim);font-size:10px;text-transform:uppercase;letter-spacing:.9px}
+.kv .v{font-family:var(--mono);font-size:12.5px;margin-top:3px}
+.transcript{background:#0c1019;border:1px solid var(--line);border-radius:12px;padding:13px;height:155px;overflow-y:auto;font-size:12.5px;margin-bottom:12px}
+.transcript .ln{margin-bottom:8px;line-height:1.45;animation:fadein .4s}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+.transcript .who{font-family:var(--mono);font-size:10px;font-weight:700;margin-right:6px}
+.who.agent{color:var(--teal)} .who.lead{color:var(--amber)}
+.dispo{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.dispo button{padding:11px 6px;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-family:var(--ui);font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
+.dispo button:hover{border-color:var(--amber);transform:translateY(-1px)}
+.dispo button.ai{border-color:var(--amber);background:var(--amber-bg);position:relative;box-shadow:0 0 14px rgba(255,176,46,.18)}
+.dispo button.ai::after{content:'AI pick';position:absolute;top:-8px;right:6px;font-size:9px;font-family:var(--mono);color:var(--amber);background:var(--bg);padding:0 5px;border-radius:4px}
+.aitabs{display:flex;gap:6px;margin-bottom:10px}
+.aitabs button{flex:1;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--muted);font-family:var(--ui);font-size:12px;font-weight:700;cursor:pointer}
+.aitabs button.on{background:var(--amber-bg);border-color:rgba(255,176,46,.45);color:var(--amber)}
+.aiblock{background:var(--panel2);border-radius:10px;padding:12px;margin-bottom:9px;border:1px solid var(--line)}
+.aiblock .lbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);margin-bottom:6px}
+.aiblock ul{padding-left:16px}
+.aiblock li{margin-bottom:4px;line-height:1.45;font-size:12.5px}
+.coach{border-left:3px solid var(--amber);background:var(--amber-bg)}
+.senti{display:flex;gap:8px}
+.senti .pill{flex:1;text-align:center;padding:8px 4px;border-radius:9px;background:var(--bg);border:1px solid var(--line)}
+.pill .bignum{font-family:var(--mono);font-size:16px;font-weight:700}
+.pill .cap{font-size:9.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;margin-top:2px}
+.smsthread{background:#0c1019;border:1px solid var(--line);border-radius:12px;padding:10px;height:175px;overflow-y:auto;margin-bottom:8px}
+.msg{max-width:82%;padding:8px 11px;border-radius:12px;margin-bottom:7px;font-size:12.5px;line-height:1.4;animation:fadein .3s}
+.msg.out{background:linear-gradient(135deg,rgba(255,176,46,.18),rgba(255,138,0,.10));border:1px solid rgba(255,176,46,.3);margin-left:auto;border-bottom-right-radius:3px}
+.msg.in{background:var(--panel2);border:1px solid var(--line);border-bottom-left-radius:3px}
+.msg .mt{font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:3px}
+.smsrow{display:flex;gap:6px}
+.smsrow input{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:9px;color:var(--text);padding:9px 11px;font-family:var(--ui);font-size:13px;outline:none}
+.smsrow input:focus{border-color:var(--amber)}
+.tmpls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tmpls button{font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid var(--line);background:var(--panel2);color:var(--muted);cursor:pointer;font-family:var(--ui)}
+.tmpls button:hover{color:var(--amber);border-color:var(--amber)}
+.compliance{font-size:10.5px;color:var(--dim);margin-top:7px;font-family:var(--mono)}
+/* gamification */
+.goals{display:flex;gap:10px;justify-content:space-between}
+.goal{text-align:center}
+.ring{position:relative;width:74px;height:74px}
+.ring svg{transform:rotate(-90deg)}
+.ring .rv{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:13px;font-weight:700}
+.goal .gl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:5px}
+.streakrow{display:flex;gap:8px;margin-top:12px}
+.streak{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px;text-align:center}
+.streak .sv{font-size:17px;font-weight:800}
+.streak .sl{font-size:9.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.6px}
+.badges{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.badge{font-size:11px;padding:5px 10px;border-radius:20px;background:var(--panel2);border:1px solid var(--line);cursor:default}
+.badge.earned{background:linear-gradient(135deg,rgba(167,139,250,.18),rgba(45,212,191,.12));border-color:rgba(167,139,250,.45)}
+.badge.locked{opacity:.4;filter:grayscale(1)}
+.battle{margin-top:2px}
+.battlebar{display:flex;height:26px;border-radius:8px;overflow:hidden;font-family:var(--mono);font-size:11px;font-weight:700}
+.battlebar .ben{background:linear-gradient(90deg,var(--teal),var(--teal2));color:#04241c;display:flex;align-items:center;padding-left:9px}
+.battlebar .joe{background:linear-gradient(90deg,var(--amber2),var(--amber));color:#1a1200;display:flex;align-items:center;justify-content:flex-end;padding-right:9px}
+.battlecap{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:5px}
+.ticker{overflow:hidden;white-space:nowrap;border:1px solid var(--line);border-radius:10px;background:var(--panel2);padding:7px 0;margin-bottom:14px}
+.ticker .tk{display:inline-block;padding-left:100%;animation:scroll 30s linear infinite;font-size:12.5px}
+@keyframes scroll{to{transform:translateX(-100%)}}
+.ticker b{color:var(--amber)}
+.xpfloat{position:fixed;font-family:var(--mono);font-weight:800;font-size:20px;color:var(--teal);text-shadow:0 0 12px rgba(45,212,191,.7);pointer-events:none;z-index:200;animation:rise 1.6s forwards}
+@keyframes rise{to{transform:translateY(-70px);opacity:0}}
+.confetti{position:fixed;width:9px;height:14px;top:-20px;z-index:300;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+/* manager */
+.mgrid{display:grid;grid-template-columns:1fr 350px;gap:14px;align-items:start}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px}
+.kpi{background:linear-gradient(180deg,var(--panel),#111624);border:1px solid var(--line);border-radius:12px;padding:13px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi.good::before{background:linear-gradient(90deg,var(--teal),var(--teal2))}
+.kpi.warn::before{background:linear-gradient(90deg,var(--amber),var(--amber2))}
+.kpi.bad::before{background:linear-gradient(90deg,var(--coral),var(--coral2))}
+.kpi .v{font-family:var(--mono);font-size:22px;font-weight:700}
+.kpi .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-top:3px}
+.kpi.good .v{color:var(--teal)} .kpi.warn .v{color:var(--amber)} .kpi.bad .v{color:var(--coral)}
+.floor{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.agentcell{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 11px;transition:all .2s}
+.agentcell:hover{transform:translateY(-2px)}
+.agentcell.flagged{border-color:var(--coral);background:var(--coral-bg);box-shadow:0 0 16px rgba(255,107,107,.15)}
+.agentcell.oncall{border-color:rgba(45,212,191,.45)}
+.agentcell .an{font-weight:700;font-size:12.5px;display:flex;align-items:center;gap:6px}
+.agentcell .st{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:3px}
+.agentcell .acts{display:flex;gap:4px;margin-top:7px}
+.agentcell .acts button{font-size:9.5px;font-family:var(--mono);padding:3px 8px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);cursor:pointer}
+.agentcell .acts button:hover{color:var(--amber);border-color:var(--amber)}
+.alert{display:flex;gap:9px;padding:10px 11px;border-radius:10px;margin-bottom:7px;font-size:12.5px;line-height:1.45;border-left:3px solid var(--line);background:var(--panel2);animation:fadein .3s}
+.alert.coral{border-left-color:var(--coral);background:var(--coral-bg)}
+.alert.amber{border-left-color:var(--amber);background:var(--amber-bg)}
+.alert.teal{border-left-color:var(--teal);background:var(--teal-bg)}
+.alert .at{font-family:var(--mono);font-size:10px;color:var(--dim);white-space:nowrap;padding-top:2px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;color:var(--dim);font-size:10px;text-transform:uppercase;letter-spacing:.8px;padding:5px 8px;border-bottom:1px solid var(--line)}
+td{padding:8px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11.5px}
+.tag{font-size:10px;font-family:var(--mono);padding:2px 8px;border-radius:5px}
+.tag.teal{background:var(--teal-bg);color:var(--teal)} .tag.coral{background:var(--coral-bg);color:var(--coral)} .tag.amber{background:var(--amber-bg);color:var(--amber)}
+.lb td:first-child{font-family:var(--ui);font-weight:700}
+/* integrations */
+.intgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.inttile{background:linear-gradient(180deg,var(--panel),#111624);border:1px solid var(--line);border-radius:14px;padding:16px;transition:all .2s}
+.inttile:hover{transform:translateY(-3px);border-color:rgba(255,176,46,.4)}
+.inttile .ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-size:20px;font-weight:800;margin-bottom:10px}
+.inttile .in{font-weight:700;font-size:15px}
+.inttile .id{font-size:12px;color:var(--muted);line-height:1.45;margin:5px 0 12px;min-height:34px}
+.introw{display:flex;align-items:center;gap:8px}
+/* live listen drawer */
+#monitor{position:fixed;top:0;right:-420px;width:400px;height:100vh;background:linear-gradient(180deg,#141a2a,#0e1320);border-left:1px solid var(--line);z-index:90;transition:right .3s;display:flex;flex-direction:column;box-shadow:-12px 0 40px rgba(0,0,0,.5)}
+#monitor.open{right:0}
+.monhead{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.monhead .mn{font-weight:800;font-size:15px}
+.monhead .ml{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.monmodes{display:flex;gap:6px;padding:12px 16px}
+.monmodes button{flex:1;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--muted);font-family:var(--ui);font-size:12px;font-weight:700;cursor:pointer}
+.monmodes button.on.m-listen{background:var(--teal-bg);border-color:var(--teal);color:var(--teal)}
+.monmodes button.on.m-whisper{background:var(--amber-bg);border-color:var(--amber);color:var(--amber)}
+.monmodes button.on.m-barge{background:var(--coral-bg);border-color:var(--coral);color:var(--coral)}
+.wave{display:flex;align-items:center;gap:3px;height:38px;padding:0 16px;margin-bottom:4px}
+.wave i{width:4px;background:linear-gradient(180deg,var(--teal),var(--teal2));border-radius:2px;animation:wv .9s ease-in-out infinite}
+@keyframes wv{0%,100%{height:6px}50%{height:30px}}
+.montr{flex:1;overflow-y:auto;margin:8px 16px;background:#0c1019;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:12.5px}
+.monstats{display:flex;gap:8px;padding:0 16px 12px}
+.monfoot{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px}
+.modebanner{margin:0 16px 8px;padding:8px 11px;border-radius:8px;font-size:12px;font-weight:600}
+/* help tool */
+#helpBtn{position:fixed;bottom:22px;right:22px;width:50px;height:50px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--amber),var(--amber2));color:#1a1200;font-size:22px;font-weight:800;cursor:pointer;z-index:140;box-shadow:0 6px 24px rgba(255,176,46,.45);transition:transform .15s}
+#helpBtn:hover{transform:scale(1.08)}
+#helpPanel{position:fixed;top:0;right:-440px;width:420px;height:100vh;background:linear-gradient(180deg,#141a2a,#0e1320);border-left:1px solid var(--line);z-index:160;transition:right .3s;display:flex;flex-direction:column;box-shadow:-12px 0 40px rgba(0,0,0,.5)}
+#helpPanel.open{right:0}
+.hh{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.hsearch{margin:12px 16px 4px}
+.hsearch input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:9px;color:var(--text);padding:9px 12px;font-family:var(--ui);font-size:13px;outline:none}
+.hsearch input:focus{border-color:var(--amber)}
+.hbody{flex:1;overflow-y:auto;padding:10px 16px}
+.hcat{font-size:10px;text-transform:uppercase;letter-spacing:1.1px;color:var(--dim);margin:14px 0 6px}
+.hitem{background:var(--panel2);border:1px solid var(--line);border-radius:10px;margin-bottom:6px;overflow:hidden}
+.hitem .hq{padding:10px 12px;font-weight:600;font-size:13px;cursor:pointer;display:flex;gap:8px}
+.hitem .hq:hover{color:var(--amber)}
+.hitem .ha{padding:0 12px 11px;font-size:12.5px;color:var(--muted);line-height:1.55;display:none}
+.hitem.open .ha{display:block}
+.hask{padding:12px 16px;border-top:1px solid var(--line)}
+.haians{background:var(--amber-bg);border:1px solid rgba(255,176,46,.35);border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.5;margin-bottom:8px;display:none}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--amber);color:var(--text);padding:11px 20px;border-radius:11px;font-size:13px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+#toast.show{opacity:1}
+.recdot{width:8px;height:8px;border-radius:50%;background:var(--coral);animation:pulse 1.2s infinite}
+.muted{color:var(--muted)} .small{font-size:11.5px}
+::-webkit-scrollbar{width:8px} ::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><span class="mark">☀</span>Venture<span>Dial</span></div><div class="sub">Inside Sales</div>
+  <span class="chip" id="roleLabel" style="cursor:pointer" onclick="openLauncher()" title="Switch role">choose role</span>
+  <div class="toggle" id="roleTabs"></div>
+  <div class="spacer"></div>
+  <div class="xpwrap" id="xpwrap"><div class="lvlbadge">7</div><div><div class="xpbar"><i id="xpFill" style="width:62%"></i></div><div class="xptxt" id="xpTxt">2,480 / 4,000 XP · Closer</div></div></div>
+  <div class="chip" id="didChip"><span class="dot teal"></span>Caller ID <b id="didNum">(603) 555-73xx</b> <span id="didHealth">clean · local</span></div>
+  <div class="recbadge"><span class="recdot"></span>REC ALL CALLS</div>
+  <div class="chip mono" id="clock"></div>
+</header>
+
+<main id="agentView">
+  <div class="ticker"><div class="tk">🔔 <b>Sofia R.</b> just booked a consult in Cranston RI &nbsp;·&nbsp; 🔥 <b>Marcus T.</b> is on a 3-day booking streak &nbsp;·&nbsp; 🏆 Team Ben leads the June Battle 17–14 &nbsp;·&nbsp; ⚡ <b>Jade L.</b> hit 50 dials before noon &nbsp;·&nbsp; 🎯 Office answer rate today: 13.4% (↑1.8) &nbsp;·&nbsp; 💬 New playbook clip: "roof-age objection" by Marcus T.</div></div>
+  <div class="grid">
+    <div>
+      <div class="card">
+        <h3>Today's Goals</h3>
+        <div class="goals">
+          <div class="goal"><div class="ring" id="ringDials"></div><div class="gl">Dials</div></div>
+          <div class="goal"><div class="ring" id="ringConn"></div><div class="gl">Connects</div></div>
+          <div class="goal"><div class="ring" id="ringAppt"></div><div class="gl">Appts</div></div>
+        </div>
+        <div class="streakrow">
+          <div class="streak"><div class="sv">🔥 3</div><div class="sl">day streak</div></div>
+          <div class="streak"><div class="sv">⚡ #2</div><div class="sl">leaderboard</div></div>
+        </div>
+        <div class="badges">
+          <span class="badge earned" title="Booked 5 appts in one day">🌟 5-a-day</span>
+          <span class="badge earned" title="Best objection handle of the week">🛡 Objection Slayer</span>
+          <span class="badge earned" title="100 dials in a day">💯 Century</span>
+          <span class="badge locked" title="10-day booking streak">🐉 Streak Dragon</span>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>June Team Battle</h3>
+        <div class="battle">
+          <div class="battlebar"><div class="ben" id="benBar" style="width:55%">BEN 17</div><div class="joe" id="joeBar" style="width:45%">14 JOSEPH</div></div>
+          <div class="battlecap"><span>MA·NH·ME·RI·CT</span><span>NY·MD·PA·NJ</span></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>Dial Queue <span class="right mono muted" id="qcount"></span></h3>
+        <div id="queue"></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>Callbacks <span class="right" style="color:var(--amber)">persistent</span></h3>
+        <div id="callbacks"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="statusbar">
+          <span class="state idle" id="callState">READY</span>
+          <span class="small muted" id="modeLabel">Adaptive dial · 2 lines · AMD on · abandon-cap guard</span>
+          <span class="timer" id="timer">00:00</span>
+        </div>
+        <div id="leadPane"></div>
+        <div id="controls" style="display:flex;gap:8px;margin:4px 0 12px"></div>
+        <div id="liveArea"></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>My Number Health <span class="right mono muted">auto-rotation · weekly registry scan</span></h3>
+        <div style="display:flex;gap:16px;flex-wrap:wrap">
+          <div class="small"><span class="dot teal"></span> <span class="mono">(603) 555-7301</span> — clean · 64/75 dials</div>
+          <div class="small"><span class="dot amber"></span> <span class="mono">(603) 555-7302</span> — 71/75 · rotating soon</div>
+          <div class="small"><span class="dot teal"></span> spare pool: 3 ready</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3>AI Copilot</h3>
+        <div class="aitabs">
+          <button id="tabBrief" class="on" onclick="setAITab('brief')">Brief</button>
+          <button id="tabScript" onclick="setAITab('script')">Script</button>
+          <button id="tabAnalysis" onclick="setAITab('analysis')">Analysis</button>
+        </div>
+        <div id="aiPane"></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>SMS <span class="right mono muted" id="smsLeadName"></span></h3>
+        <div class="smsthread" id="smsThread"></div>
+        <div class="smsrow"><input id="smsInput" placeholder="Text this homeowner…" onkeydown="if(event.key==='Enter')sendSMS()"><button class="btn amber sm" onclick="sendSMS()">Send</button></div>
+        <div class="tmpls" id="smsTmpls"></div>
+        <div class="compliance">10DLC registered · STOP auto-handled · opt-out appended</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<main id="mgrView" style="display:none">
+  <div class="kpis" id="kpis"></div>
+  <div class="mgrid">
+    <div>
+      <div class="card">
+        <h3>Live Salesfloor — 25 agents <span class="right muted" id="floorSummary"></span></h3>
+        <div class="floor" id="floor"></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>Performance Pulse — real-time <span class="right mono muted">vs 7-day baseline · auto-flagged</span></h3>
+        <table><thead><tr><th>Agent</th><th>Dials</th><th>Conn %</th><th>Appts</th><th>AI score</th><th>Live sentiment</th><th>vs baseline</th><th></th></tr></thead><tbody id="perfTable"></tbody></table>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>Inbound Ring Groups <span class="right mono muted">source-identified routing</span></h3>
+        <table><thead><tr><th>Ring group</th><th>Source</th><th>Routes to</th><th>Live</th><th>Answered</th><th>Missed</th><th>Avg pickup</th></tr></thead><tbody>
+          <tr><td>NH Sales Line</td><td>Google Ads — "solar cost NH"</td><td>Team Ben (12, simul.)</td><td><span class="tag amber">1 ringing</span></td><td>34</td><td>2</td><td>9s</td></tr>
+          <tr><td>NY/NJ Sales Line</td><td>Facebook Lead Ads</td><td>Team Joseph (13, simul.)</td><td>—</td><td>28</td><td>1</td><td>11s</td></tr>
+          <tr><td>Customer Care</td><td>Website IVR · existing customers</td><td>CX team (4, round-robin)</td><td><span class="tag amber">2 in queue</span></td><td>51</td><td>0</td><td>6s</td></tr>
+          <tr><td>Callback Line</td><td>Missed-call auto-SMS replies</td><td>All teams (idle-first)</td><td>—</td><td>12</td><td>0</td><td>7s</td></tr>
+        </tbody></table>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>Number Pool Health</h3>
+        <table><thead><tr><th>Number</th><th>Area</th><th>Dials today</th><th>Answer rate</th><th>Status</th></tr></thead><tbody id="numTable"></tbody></table>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h3>Alerts <span class="right mono muted">live · also → Google Chat</span></h3>
+        <div id="alertFeed"></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>AI Coaching Feed — live</h3>
+        <div class="alert coral"><div class="at">now</div><div><b>Sofia R.</b> — price objection going sideways on live call (sentiment → Tense). <button class="btn ghost sm" onclick="openMonitor(2,'whisper')">🗣 whisper in</button></div></div>
+        <div class="alert amber"><div class="at">12m</div><div><b>Tyler H.</b> — talk ratio 78% across last 5 calls (target ≤55%). <button class="btn ghost sm" onclick="toast('Talk-track tip pushed to Tyler’s screen')">send tip</button></div></div>
+        <div class="alert teal"><div class="at">26m</div><div><b>Jade L.</b> — connects at 2.1× baseline this hour. <button class="btn ghost sm" onclick="toast('Opener clipped to team playbook')">clip opener</button></div></div>
+        <div class="alert coral"><div class="at">1h</div><div><b>Devin O.</b> — 0 appts in 3 days vs 1.2/day baseline. <button class="btn ghost sm" onclick="toast('AI roleplay set (price objections) assigned to Devin')">assign roleplay</button></div></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>June Team Battle</h3>
+        <div class="battlebar"><div class="ben" style="width:55%">BEN 17</div><div class="joe" style="width:45%">14 JOSEPH</div></div>
+        <div class="battlecap"><span>Winner: team lunch 🌮</span><span>12 days left</span></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>Appointments Leaderboard — June</h3>
+        <table class="lb"><thead><tr><th>Agent</th><th>Appts</th><th>Connect %</th></tr></thead><tbody id="lbTable"></tbody></table>
+        <h3 style="margin-top:14px">Most Calls — Today</h3>
+        <table class="lb"><thead><tr><th>Agent</th><th>Dials</th><th>Team</th></tr></thead><tbody id="lbCalls"></tbody></table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<main id="cxView" style="display:none">
+  <div class="kpis" style="grid-template-columns:repeat(4,1fr)">
+    <div class="kpi good"><div class="v">4.8★</div><div class="l">CSAT (30 days)</div></div>
+    <div class="kpi warn"><div class="v">12</div><div class="l">Open conversations</div></div>
+    <div class="kpi good"><div class="v">3m 02s</div><div class="l">Median first response</div></div>
+    <div class="kpi good"><div class="v">51</div><div class="l">Care calls today</div></div>
+  </div>
+  <div class="mgrid">
+    <div>
+      <div class="card">
+        <h3>Unified Inbox — voice & SMS <span class="right mono muted">Customer Care ring group</span></h3>
+        <div class="qitem now" onclick="toast('Thread opened — full history: calls, texts, recordings, AI summaries')" style="cursor:pointer">
+          <div class="nm"><span class="dot coral"></span>Linda Moreau <span class="tag coral">install delayed</span> <span class="srct in">📞 Care line</span></div>
+          <div class="meta">"Nobody told me the crew moved to Friday…" · 6 min ago · unread</div></div>
+        <div class="qitem" onclick="toast('Thread opened')" style="cursor:pointer">
+          <div class="nm">Hector Ruiz <span class="tag amber">billing question</span> <span class="srct ap">💬 SMS</span></div>
+          <div class="meta">"Why is my first bill still full price?" · 22 min ago</div></div>
+        <div class="qitem" onclick="toast('Thread opened')" style="cursor:pointer">
+          <div class="nm">Janet Kim <span class="tag teal">consult reschedule</span> <span class="srct in">📞 Care line</span></div>
+          <div class="meta">Moved Thu consult to Fri 2pm — confirmed by SMS · 1 hr ago</div></div>
+        <div class="qitem" onclick="toast('Thread opened')" style="cursor:pointer">
+          <div class="nm">Bill Ostrowski <span class="tag teal">post-install check-in</span> <span class="srct ap">💬 SMS</span></div>
+          <div class="meta">"App says I generated 31 kWh yesterday, is that good?" · 2 hr ago</div></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>Inbound Screen-Pop <span class="right mono muted">what CX sees when Care line rings</span></h3>
+        <div class="leadcard" style="margin-bottom:0">
+          <div style="min-width:170px"><div class="name" style="font-size:16px">Linda Moreau</div><div class="num">(603) 555-0291</div><div class="small muted">Hooksett, NH · <span class="srct in">📞 Customer Care · Website IVR</span></div></div>
+          <div class="kv"><div class="k">Stage</div><div class="v">Install scheduled</div></div>
+          <div class="kv"><div class="k">Install date</div><div class="v">Fri Jun 19</div></div>
+          <div class="kv"><div class="k">Last contact</div><div class="v">SMS · Jun 8</div></div>
+          <div class="kv"><div class="k">Open ticket</div><div class="v">#1482 — crew resched.</div></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h3>Customer Journey</h3>
+        <table><thead><tr><th>Customer</th><th>Stage</th><th>Next milestone</th></tr></thead><tbody>
+          <tr><td style="font-family:var(--ui);font-weight:600">Karen Mitchell</td><td><span class="tag amber">consult Thu 4pm</span></td><td>Proposal</td></tr>
+          <tr><td style="font-family:var(--ui);font-weight:600">Janet Kim</td><td><span class="tag amber">consult Fri 2pm</span></td><td>Proposal</td></tr>
+          <tr><td style="font-family:var(--ui);font-weight:600">Linda Moreau</td><td><span class="tag coral">install delayed</span></td><td>Install Jun 19</td></tr>
+          <tr><td style="font-family:var(--ui);font-weight:600">Hector Ruiz</td><td><span class="tag teal">installed</span></td><td>First-bill review</td></tr>
+          <tr><td style="font-family:var(--ui);font-weight:600">Bill Ostrowski</td><td><span class="tag teal">installed</span></td><td>30-day check-in</td></tr>
+        </tbody></table>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>AI Suggestions</h3>
+        <div class="aiblock coach"><div class="lbl">Proactive outreach</div><div class="small">3 customers have installs this week with no confirmation text in 48h — send the confirm template now to prevent Care-line calls.</div></div>
+        <div class="aiblock"><div class="lbl">Pattern detected</div><div class="small">"First bill still full price" asked 6× this month — AI drafted an FAQ SMS template for approval.</div></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<main id="opsView" style="display:none">
+  <div class="kpis" style="grid-template-columns:repeat(5,1fr)">
+    <div class="kpi good"><div class="v">13.4%</div><div class="l">Contact rate</div></div>
+    <div class="kpi good"><div class="v">98%</div><div class="l">TrustedForm coverage</div></div>
+    <div class="kpi good"><div class="v">23</div><div class="l">DNC-blocked this week</div></div>
+    <div class="kpi warn"><div class="v">14</div><div class="l">Dupes auto-merged today</div></div>
+    <div class="kpi good"><div class="v">41s</div><div class="l">Median speed-to-lead</div></div>
+  </div>
+  <div class="mgrid">
+    <div>
+      <div class="card">
+        <h3>Lead Source Performance</h3>
+        <table><thead><tr><th>Source</th><th>Leads (wk)</th><th>Contact %</th><th>Appt %</th><th>Median STL</th><th>Status</th></tr></thead><tbody>
+          <tr><td>⚡ LeadConduit web forms</td><td>142</td><td>31%</td><td>12.7%</td><td>41s</td><td><span class="tag teal">healthy</span></td></tr>
+          <tr><td>📞 Google Ads inbound (NH line)</td><td>61</td><td>—</td><td>18.0%</td><td>—</td><td><span class="tag teal">healthy</span></td></tr>
+          <tr><td>☁ SF: Referrals</td><td>23</td><td>44%</td><td>21.7%</td><td>2h</td><td><span class="tag teal">healthy</span></td></tr>
+          <tr><td>📞 Facebook Lead Ads (NY/NJ line)</td><td>54</td><td>—</td><td>9.3%</td><td>—</td><td><span class="tag amber">CPL rising</span></td></tr>
+          <tr><td>☁ SF: NY Reactivation</td><td>310</td><td>8%</td><td>2.2%</td><td>—</td><td><span class="tag amber">aging — refresh list</span></td></tr>
+          <tr><td>☁ SF: Canvass Follow-up</td><td>47</td><td>26%</td><td>10.6%</td><td>1d</td><td><span class="tag teal">healthy</span></td></tr>
+        </tbody></table>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>Ring Groups & Routing <span class="right mono muted">config</span></h3>
+        <table><thead><tr><th>Group</th><th>Inbound numbers</th><th>Source tag</th><th>Routes to</th><th>Strategy</th><th></th></tr></thead><tbody>
+          <tr><td>NH Sales Line</td><td>(603) 555-7400</td><td>Google Ads</td><td>Team Ben</td><td>simultaneous</td><td><button class="btn ghost sm" onclick="toast('Ring group editor opened')">edit</button></td></tr>
+          <tr><td>NY/NJ Sales Line</td><td>(914) 555-7410</td><td>Facebook</td><td>Team Joseph</td><td>simultaneous</td><td><button class="btn ghost sm" onclick="toast('Ring group editor opened')">edit</button></td></tr>
+          <tr><td>Customer Care</td><td>(800) 555-7420</td><td>Website IVR</td><td>CX team</td><td>round-robin</td><td><button class="btn ghost sm" onclick="toast('Ring group editor opened')">edit</button></td></tr>
+          <tr><td>Callback Line</td><td>(603) 555-7430</td><td>Missed-call SMS</td><td>All · idle-first</td><td>longest-idle</td><td><button class="btn ghost sm" onclick="toast('Ring group editor opened')">edit</button></td></tr>
+        </tbody></table>
+        <div class="compliance" style="margin-top:8px">+ Add ring group · every inbound call carries its source tag onto the agent screen-pop and into Salesforce attribution</div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>State Scripts <span class="right mono muted">auto-populate on agent screen by lead's state</span></h3>
+        <div style="display:flex;gap:10px;margin-bottom:8px;align-items:center">
+          <select id="scrState" onchange="loadScript()" style="background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:7px 10px;font-family:var(--ui);font-weight:600">
+            <option value="NH">NH</option><option value="MA">MA</option><option value="ME">ME</option><option value="RI">RI</option><option value="CT">CT</option><option value="NY">NY</option><option value="NJ">NJ</option><option value="PA">PA</option><option value="MD">MD</option><option value="DEFAULT">Default</option>
+          </select>
+          <span class="small muted mono">merge fields: {firstName} {town} {utility} {bill} {agent}</span>
+        </div>
+        <textarea id="scrText" rows="8" style="width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--text);font-family:var(--mono);font-size:12px;padding:11px;line-height:1.55;resize:vertical"></textarea>
+        <div style="margin-top:8px;display:flex;gap:8px;align-items:center"><button class="btn amber sm" onclick="saveScript()">Save script</button><span class="small muted">pushes live to all agents — populates with the lead's data on every call in that state</span></div>
+        <div class="aiblock coach" style="margin-top:12px"><div class="lbl">🧪 AI Script Lab — learns from every call, improves continuously</div>
+          <div class="small" style="margin-bottom:7px">Calls opening with the <b>"Con Ed +9.2% just approved"</b> hook book <b>2.3×</b> more NY consults (n=214). Draft added to NY script. <button class="btn ghost sm" onclick="toast('NY script updated — change tracked, A/B continues')">apply</button></div>
+          <div class="small" style="margin-bottom:7px">"No site visit" phrasing beats "free consultation" on conversion <b>+38%</b> across all states. <button class="btn ghost sm" onclick="toast('Applied to all state scripts')">apply all</button></div>
+          <div class="small">Roof-age objection: agents using Marcus's 15-yr answer hold the call <b>47s longer</b>. Suggest adding to OPEN? <button class="btn ghost sm" onclick="toast('A/B test started — 50% of NH calls')">A/B test</button></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>Disposition Sets — per user type <span class="right mono muted">what agents see at wrap-up</span></h3>
+        <table><thead><tr><th>User type</th><th>Dispositions</th><th></th></tr></thead><tbody>
+          <tr><td>Sales agent</td><td style="font-size:10.5px">Callback set · Send estimate · Not interested · No answer · Voicemail · Wrong number · Do not call · Other</td><td><button class="btn ghost sm" onclick="toast('Disposition editor opened')">edit</button></td></tr>
+          <tr><td>CX agent</td><td style="font-size:10.5px">Resolved · Ticket opened · Escalated · Reschedule · Billing → Ops · Voicemail · Do not call · Other</td><td><button class="btn ghost sm" onclick="toast('Disposition editor opened')">edit</button></td></tr>
+          <tr><td>Team lead</td><td style="font-size:10.5px">+ Save attempt · Win-back (adds to sales set)</td><td><button class="btn ghost sm" onclick="toast('Disposition editor opened')">edit</button></td></tr>
+        </tbody></table>
+        <div class="compliance">each disposition maps to a CRM status + optional automation (SMS, callback, DNC)</div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h3>Compliance Center</h3>
+        <div class="aiblock"><div class="lbl">DNC Scrub</div><div class="small">
+          <span class="dot teal"></span> Federal + state DNC: scrubbed nightly, re-scrub every 31 days<br>
+          <span class="dot teal"></span> Real-time pre-dial check on every call<br>
+          <span class="dot teal"></span> Internal DNC list: 412 numbers, synced to Salesforce<br>
+          <span class="dot amber"></span> 6 numbers auto-removed on import of "NY Reactivation" today</div></div>
+        <div class="aiblock"><div class="lbl">Allowable calling hours by state — editable, auto-enforced</div>
+          <table style="margin:4px 0 8px"><thead><tr><th>State</th><th>From (lead local)</th><th>Until</th><th>Sun</th></tr></thead><tbody id="stateRules"></tbody></table>
+          <div style="display:flex;gap:8px;align-items:center"><button class="btn amber sm" onclick="saveStateRules()">Save & enforce</button><span class="small muted">blocks outbound dials, SMS sends & queue pulls outside the lead's local window — auto-defers to window open</span></div>
+          <div class="compliance">defaults = federal 8am–9pm; tighten per state law (verify with counsel)</div></div>
+        <div class="aiblock"><div class="lbl">Abandon rate (TCPA cap 3.0%)</div>
+          <div style="height:9px;background:var(--bg);border-radius:5px;overflow:hidden;margin-top:4px"><div style="width:80%;height:100%;background:linear-gradient(90deg,var(--teal),var(--amber))"></div></div>
+          <div class="small mono" style="margin-top:4px">2.4% — lines auto-throttle at 2.7%</div></div>
+        <div class="aiblock"><div class="lbl">Consent & recording</div><div class="small">TrustedForm certs on 98% of web leads · two-party-consent notice auto-played in required states · recordings retained 2 years</div></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>List Hygiene — live</h3>
+        <div class="alert amber"><div class="at">2:52 PM</div><div><b>DNC scrub:</b> 6 matches removed from SF import "NY Reactivation" (310 → 304).</div></div>
+        <div class="alert teal"><div class="at">2:50 PM</div><div><b>Dedupe:</b> 14 duplicates auto-merged across LeadConduit + Salesforce.</div></div>
+        <div class="alert teal"><div class="at">2:31 PM</div><div><b>Line-type check:</b> 9 landlines tagged — excluded from SMS sequences.</div></div>
+        <div class="alert amber"><div class="at">1:15 PM</div><div><b>Disconnected:</b> 17 dead numbers scrubbed after carrier lookup — keeps spam score healthy.</div></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<main id="intView" style="display:none">
+  <div class="card" style="margin-bottom:14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <div>
+      <div style="font-size:17px;font-weight:800">One-click integrations</div>
+      <div class="small muted" style="margin-top:3px">OAuth connect — no IT ticket, no professional services. Data syncs both ways within minutes.</div>
+    </div>
+    <div class="spacer"></div>
+    <div class="chip"><span class="dot teal"></span><b id="intCount">4</b>&nbsp;connected</div>
+  </div>
+  <div class="intgrid" id="intGrid"></div>
+  <div class="card" style="margin-top:14px">
+    <h3>API & Webhooks <span class="right mono muted">for everything else</span></h3>
+    <div class="small muted" style="line-height:1.6">REST API + real-time webhooks for every event (call.completed, appt.booked, agent.inactive, number.flagged, sms.received).<br>
+    <span class="mono" style="color:var(--teal)">POST https://api.venturedial.com/v1/webhooks</span> &nbsp;·&nbsp; Zapier & Make connectors included — build automations without code.</div>
+  </div>
+</main>
+
+<div id="launcher">
+  <div class="lwrap">
+    <div class="logo" style="justify-content:center;margin-bottom:14px"><span class="mark">☀</span>Venture<span>Dial</span></div>
+    <div class="lt">Who's signing in?</div>
+    <div class="ls">Each team gets its own workspace — same data, different job.</div>
+    <div class="rolecards">
+      <div class="rolecard" onclick="setMode('agent')"><div class="ri">🎧</div><div class="rn">Agent Workspace</div><div class="rd">Dialer, AI copilot, SMS, goals & XP</div></div>
+      <div class="rolecard" onclick="setMode('mgr')"><div class="ri">🛡</div><div class="rn">Manager Portal</div><div class="rd">Live salesfloor, listen/whisper/barge, alerts, ring groups</div></div>
+      <div class="rolecard" onclick="setMode('cx')"><div class="ri">💬</div><div class="rn">CX Portal</div><div class="rd">Unified inbox, care line, customer journey</div></div>
+      <div class="rolecard" onclick="setMode('ops')"><div class="ri">⚙️</div><div class="rn">Ops Portal</div><div class="rd">Lead sources, routing, DNC & compliance, list hygiene</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="mapModal" onclick="if(event.target===this)closeMap()">
+  <div class="mapbox">
+    <div class="mh"><b>📍 <span id="mapAddr">—</span></b><div class="spacer"></div><a id="mapLink" href="#" target="_blank" class="btn ghost sm" style="text-decoration:none">Open in Google Maps ↗</a><button class="btn ghost sm" onclick="closeMap()">✕</button></div>
+    <iframe id="mapFrame" src="" width="100%" height="320" style="display:block;border:0;background:#1c2a1e" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Satellite view"></iframe>
+    <div class="mapfacts">
+      <span class="tag teal">☀ sun score 87/100</span><span class="tag teal">roof ~12 yrs · asphalt</span><span class="tag teal">no shading flags</span><span class="tag amber">est. system 8.4 kW</span><span class="tag teal">south-facing plane 620 sq ft</span>
+    </div>
+  </div>
+</div>
+
+<div id="monitor">
+  <div class="monhead">
+    <span class="dot teal"></span>
+    <div><div class="mn" id="monName">—</div><div class="ml" id="monLead">—</div></div>
+    <div class="spacer"></div>
+    <span class="recbadge" style="font-size:10px"><span class="recdot"></span>REC</span>
+    <button class="btn ghost sm" onclick="closeMonitor()">✕</button>
+  </div>
+  <div class="monmodes">
+    <button class="m-listen on" id="mListen" onclick="setMonMode('listen')">👂 Listen</button>
+    <button class="m-whisper" id="mWhisper" onclick="setMonMode('whisper')">🗣 Whisper</button>
+    <button class="m-barge" id="mBarge" onclick="setMonMode('barge')">⚡ Barge</button>
+  </div>
+  <div class="modebanner" id="monBanner"></div>
+  <div class="wave" id="monWave"></div>
+  <div class="monstats">
+    <div class="pill" style="flex:1"><div class="bignum" style="color:var(--teal)" id="monSent">Positive</div><div class="cap">Live sentiment</div></div>
+    <div class="pill" style="flex:1"><div class="bignum" id="monTalk">52%</div><div class="cap">Agent talk</div></div>
+    <div class="pill" style="flex:1"><div class="bignum mono" id="monDur">03:12</div><div class="cap">Duration</div></div>
+  </div>
+  <div class="montr" id="monTr"></div>
+  <div class="monfoot">
+    <button class="btn ghost sm" style="flex:1" onclick="toast('Coaching note sent to agent screen')">💬 Send note</button>
+    <button class="btn ghost sm" style="flex:1" onclick="toast('Call bookmarked for coaching review')">🔖 Bookmark</button>
+  </div>
+</div>
+
+<button id="helpBtn" onclick="toggleHelp()" title="Help">?</button>
+<div id="helpPanel">
+  <div class="hh"><b style="font-size:15px">Help Center</b><span class="muted small">VentureDial</span><div class="spacer"></div><button class="btn ghost sm" onclick="toggleHelp()">✕</button></div>
+  <div class="hsearch"><input id="helpSearch" placeholder="Search help… (whisper, DNC, scripts, ring groups)" oninput="renderHelp()"></div>
+  <div class="hbody" id="helpBody"></div>
+  <div class="hask">
+    <div class="haians" id="haians"></div>
+    <div style="display:flex;gap:6px"><input id="haq" placeholder="Ask AI anything about VentureDial…" style="flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:9px;color:var(--text);padding:9px 12px;font-family:var(--ui);font-size:13px;outline:none" onkeydown="if(event.key==='Enter')askHelp()"><button class="btn amber sm" onclick="askHelp()">Ask</button></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+// ---------- DATA ----------
+const LEADS=[
+ {name:'Karen Mitchell',phone:'(603) 555-0142',town:'Nashua, NH',utility:'Eversource NH',bill:'$284/mo',source:'Web form — 4 min ago',attempts:1,team:'Ben',
+  brief:['HOT: web form submitted 4 minutes ago — speed-to-lead window open.','Eversource NH rates up 11% YoY; her est. bill $284/mo is top-quartile for Nashua.','Prior call (Jun 9): asked about roof age requirements — bring the 15-yr shingle answer ready.','South-facing roof per satellite pre-check; no shading flags.'],
+  lastCall:{summary:['Asked twice about roof age — answered vaguely last time.','Positive on savings, hesitant on "another sales visit".','Best window: weekday afternoons.'],objection:'Skeptical of in-home visits — offer virtual consult first.',coach:'You talked 71% of the last call. Lead with her roof-age question, then pause.',sentiment:'Warm',talk:71,nextStep:'Offer virtual consult slot Thu 4pm'},
+  script:[['agent','Hi Karen, this is {AGENT} with Venture Home Solar — you just asked about solar for your Nashua home?'],['lead','Oh wow, that was fast. Yes — mostly wondering if my roof even qualifies, it\'s about 12 years old.'],['agent','Great question — 12 years is well within range. Asphalt shingle under 15 years installs cleanly. Can I ask what Eversource runs you monthly?'],['lead','Around $280, sometimes more in winter.'],['agent','That puts you in the range where folks see real savings. Rather than a sales visit, we do a 20-minute virtual consult — would Thursday at 4 work?'],['lead','Virtual works much better for me. Thursday at 4 is fine.']]},
+ {name:'Derek Alvarez',phone:'(914) 555-0188',town:'Yonkers, NY',utility:'Con Edison',bill:'$310/mo',source:'Aged list — reactivation',attempts:3,team:'Joseph',
+  brief:['Aged lead, 3 prior attempts — all before 5pm. AI suggests after-5 window (answered SMS at 6:12pm last week).','Con Ed rate case approved: +9.2% — fresh hook.','SMS thread open: he replied "maybe next month" on Jun 2. Reference it.'],
+  lastCall:{summary:['Never connected by phone; engaged on SMS only.','Replied "maybe next month" — soft timing objection, not a no.'],objection:'Timing — "next month". Anchor on Con Ed increase landing now.',coach:'Open with the SMS thread, not a cold intro. He already knows us.',sentiment:'Lukewarm',talk:0,nextStep:'Call after 5pm or continue SMS'},
+  script:[['agent','Hi Derek — {AGENT} from Venture Home Solar. You texted with us a couple weeks back about your Con Ed bill.'],['lead','Oh right, yeah. Listen, I\'ve got about two minutes.'],['agent','Two minutes is all I need. Con Ed\'s 9% increase was just approved — that $310 bill is heading to $340. Want me to run your exact numbers and text them over?'],['lead','You can text me the numbers, sure. If they look good I\'ll do a call next week.']]},
+ {name:'Priya Raman',phone:'(401) 555-0173',town:'Cranston, RI',utility:'Rhode Island Energy',bill:'$245/mo',source:'Referral — J. Raman (installed 2025)',attempts:0,team:'Ben',
+  brief:['Referral from brother Jay Raman — system installed Aug 2025, NPS 10.','Referrals close 3.1x better. Mention Jay\'s 38% bill reduction (permission: granted).','RI Energy net-metering credit unchanged for 2026 — favorable.'],
+  lastCall:null,
+  script:[['agent','Hi Priya, this is {AGENT} with Venture Home Solar — your brother Jay suggested I reach out. We did his install last year.'],['lead','Oh, Jay won\'t stop talking about his electric bill. What\'s involved?'],['agent','He\'s saving about 38% — happy to see what your roof would do. It starts with a quick virtual consult, no site visit needed.'],['lead','Sure, I\'m curious. What times do you have?']]},
+ {name:'Tom Gallagher',phone:'(207) 555-0119',town:'Portland, ME',utility:'CMP',bill:'$198/mo',source:'Door canvass follow-up',attempts:2,team:'Ben',
+  brief:['Canvasser note: interested but spouse decision-maker not home.','Both prior dials went to voicemail before 10am — AI suggests 4–6pm local.','CMP delivery charges among highest in New England — strong cost angle.'],
+  lastCall:{summary:['Two voicemails, no callback.','Canvass intel: spouse Mary is the decision-maker.'],objection:'None on record — connection problem, not interest problem.',coach:'Ask for a time when both Tom and Mary are available before pitching.',sentiment:'Unknown',talk:0,nextStep:'Dial in 4–6pm window; aim for joint appointment'},
+  script:[['agent','Hi, is this Tom? {AGENT} with Venture Home Solar — our canvasser Dana stopped by last week.'],['lead','Oh yeah, Dana. My wife handles this stuff honestly, she had questions.'],['agent','Perfect — let\'s find 20 minutes when you\'re both free. Evenings or weekend better?'],['lead','Saturday morning, maybe 10?']]}
+];
+const SMS_INIT={
+ 'Karen Mitchell':[{dir:'in',txt:'Hi, I filled out the form on your site about solar quotes',t:'2:41 PM'}],
+ 'Derek Alvarez':[{dir:'out',txt:'Hi Derek — following up on your solar inquiry. Good time for a quick call this week? Reply STOP to opt out.',t:'Jun 2, 5:58 PM'},{dir:'in',txt:'maybe next month, busy rn',t:'Jun 2, 6:12 PM'}],
+ 'Priya Raman':[],'Tom Gallagher':[]};
+const TEMPLATES=['Running 5 min late — still good?','Here\'s your savings estimate link','Confirming your consult — reply YES','Sorry I missed you — best time to call?'];
+const VIA={'Karen Mitchell':['ap','⚡ LeadConduit'],'Derek Alvarez':['sf','☁ SF: NY Reactivation'],'Priya Raman':['sf','☁ SF: Referrals'],'Tom Gallagher':['sf','☁ SF: Canvass Follow-up'],'Brianna Foster':['ap','⚡ LeadConduit · live'],'Greg Hanley':['in','📞 Inbound · NH Sales Line — Google Ads']};
+const ADDR={'Karen Mitchell':'18 Birchwood Ln, Nashua, NH','Derek Alvarez':'42 Palmer Ave, Yonkers, NY','Priya Raman':'77 Glen Rd, Cranston, RI','Tom Gallagher':'9 Saco St, Portland, ME','Brianna Foster':'231 Elm Ridge Dr, Manchester, NH','Greg Hanley':'5 Pinkerton Rd, Derry, NH'};
+const INBOUND={name:'Greg Hanley',phone:'(603) 555-0163',town:'Derry, NH',utility:'Eversource NH',bill:'unknown',source:'Inbound — NH Sales Line',attempts:0,team:'Ben',
+ brief:['📞 INBOUND on NH Sales Line — source: Google Ads campaign "solar cost NH".','No CRM match — new prospect auto-created in Salesforce with source attribution.','Ring group: Team Ben (12 agents, simultaneous) — you answered first.','Clicked the ad 2 minutes before calling — high intent.'],
+ lastCall:null,
+ script:[['lead','Hi, yeah — I was just looking at your solar page. Do you guys cover Derry?'],['agent','We sure do — half my Tuesday installs are in Derry. Were you mostly looking at cost?'],['lead','Yeah, what a system actually runs, and if it\'s worth it with Eversource rates.'],['agent','Best way is a quick virtual consult — we pull your roof up on satellite and run your real bill. Tomorrow 10am or Thursday 6pm?'],['lead','Thursday evening is better.']]};
+const HOT_LEAD={name:'Brianna Foster',phone:'(603) 555-0177',town:'Manchester, NH',utility:'Eversource NH',bill:'$262/mo',source:'LeadConduit — just now',attempts:0,team:'Ben',submittedAt:null,
+ brief:['⚡ SPEED-TO-LEAD: form submitted seconds ago — contact odds drop ~8× after 5 minutes.','TrustedForm certificate captured — one-to-one consent verified for Venture Home Solar.','LeadConduit pre-validation passed: mobile line, dedupe clean, in service area.','Form data: owns home, Eversource NH, est. bill $262/mo.'],
+ lastCall:null,
+ script:[['agent','Hi Brianna, this is {AGENT} with Venture Home Solar — you just requested a solar quote online?'],['lead','Wow, yes — like a minute ago. That was fast.'],['agent','That\'s the job! While it\'s fresh — looks like you\'re with Eversource, around $260 a month?'],['lead','Yeah, about that. Winter is worse.'],['agent','Let\'s map your savings — it\'s a 20-minute virtual consult. I have today 5:30 or tomorrow 9am.'],['lead','Today at 5:30 works.']]};
+const BEN=['Marcus T.','Dana K.','Sofia R.','Liam P.','Aisha B.','Noah G.','Emma W.','Carlos M.','Jade L.','Owen S.','Maya F.','Eli D.'];
+const JOE=['Tyler H.','Nina V.','Jordan C.','Ruby A.','Sam K.','Lena M.','Devin O.','Tara J.','Felix N.','Iris P.','Cole B.','Zoe Q.','Andre L.'];
+const SENTS=['Positive','Warming','Neutral','Tense'];
+// disposition sets per user type — editable in Ops
+const DISPO_SETS={
+ 'sales-agent':['Callback set','Send estimate','Not interested','No answer','Voicemail','Wrong number','Do not call','Other'],
+ 'cx-agent':['Resolved','Ticket opened','Escalated','Reschedule','Billing → Ops','Voicemail','Do not call','Other'],
+ 'team-lead':['Callback set','Send estimate','Not interested','Save attempt','Win-back','Voicemail','Do not call','Other']};
+let CURRENT_ROLE_TYPE='sales-agent';
+const AGENTS=[...BEN.map(n=>({n,team:'Ben'})),...JOE.map(n=>({n,team:'Joseph'}))].map((a,i)=>({
+ ...a,id:i,status:'oncall',idleMin:0,appts:Math.floor(Math.random()*9)+2,connect:(Math.random()*6+8).toFixed(1),callsToday:Math.floor(Math.random()*40)+25,
+ aiScore:70+Math.floor(Math.random()*26),trend:+(Math.random()*8-3).toFixed(1),sent:SENTS[Math.floor(Math.random()*4)]}));
+// state calling windows — editable in Ops
+const STATE_RULES={MA:['08:00','21:00',true],NH:['08:00','21:00',true],ME:['08:00','21:00',true],RI:['09:00','18:00',false],CT:['08:00','21:00',true],NY:['08:00','21:00',true],MD:['08:00','21:00',true],PA:['08:00','20:00',false],NJ:['08:00','20:00',true]};
+const tIn='background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:6px;padding:3px 6px;font-family:var(--mono);font-size:11px';
+function renderStateRules(){
+ $('stateRules').innerHTML=Object.entries(STATE_RULES).map(([s,r])=>`<tr><td><b>${s}</b></td>
+  <td><input type="time" value="${r[0]}" id="sr-${s}-0" style="${tIn}"></td>
+  <td><input type="time" value="${r[1]}" id="sr-${s}-1" style="${tIn}"></td>
+  <td><input type="checkbox" ${r[2]?'checked':''} id="sr-${s}-2"></td></tr>`).join('');
+}
+function saveStateRules(){
+ Object.keys(STATE_RULES).forEach(s=>{STATE_RULES[s]=[$('sr-'+s+'-0').value,$('sr-'+s+'-1').value,$('sr-'+s+'-2').checked]});
+ toast('✓ Calling windows saved — enforced across dialer, SMS & ring groups');
+}
+function stateOf(l){const m=/, ([A-Z]{2})$/.exec(l.town);return m?m[1]:'NH'}
+function fmtT(t){let p=t.split(':').map(Number);const ap=p[0]>=12?'p':'a';let h=p[0]%12||12;return h+(p[1]?':'+String(p[1]).padStart(2,'0'):'')+ap}
+function windowOK(st){
+ const r=STATE_RULES[st];if(!r)return true;
+ const now=new Date(),cur=now.getHours()*60+now.getMinutes();
+ if(now.getDay()===0&&!r[2])return false;
+ const a=r[0].split(':'),b=r[1].split(':');
+ return cur>=(+a[0]*60+ +a[1])&&cur<(+b[0]*60+ +b[1]);
+}
+AGENTS[3].status='idle'; AGENTS[3].idleMin=18;
+AGENTS[15].status='idle'; AGENTS[15].idleMin=22;
+AGENTS[7].status='wrap'; AGENTS[7].idleMin=2;
+AGENTS[11].status='wrap'; AGENTS[11].idleMin=1;
+AGENTS[19].status='break'; AGENTS[19].idleMin=9;
+AGENTS[22].status='idle'; AGENTS[22].idleMin=4;
+const NUMBERS=[
+ {num:'(603) 555-7301',area:'Nashua NH',dials:64,ans:'14.2%',st:'clean'},
+ {num:'(603) 555-7302',area:'Manchester NH',dials:71,ans:'12.8%',st:'rotate-soon'},
+ {num:'(914) 555-7310',area:'Yonkers NY',dials:38,ans:'11.4%',st:'clean'},
+ {num:'(401) 555-7320',area:'Providence RI',dials:52,ans:'13.6%',st:'clean'},
+ {num:'(917) 555-7311',area:'NYC NY',dials:0,ans:'—',st:'flagged'},
+ {num:'(207) 555-7330',area:'Portland ME',dials:44,ans:'15.1%',st:'clean'},
+ {num:'(978) 555-7340',area:'Lowell MA',dials:0,ans:'—',st:'quarantine'},
+ {num:'(603) 555-7303',area:'Concord NH',dials:0,ans:'—',st:'spare'}];
+let ALERTS=[
+ {cls:'coral',t:'2:55 PM',msg:'<b>Lead source ▼:</b> SF "NY Reactivation" contact rate 8.0% vs 12.9% 14-day baseline (−38%). Recommend list refresh — opened in Ops.'},
+ {cls:'teal',t:'2:51 PM',msg:'<b>Lead source ▲:</b> Google Ads inbound running +41% vs baseline today. Consider shifting 2 agents to NH Sales Line coverage.'},
+ {cls:'coral',t:'2:47 PM',msg:'<b>Inactivity:</b> Nina V. idle 22 min — no dial since 2:25 PM. Notified Joseph via Google Chat.'},
+ {cls:'coral',t:'2:43 PM',msg:'<b>Inactivity:</b> Liam P. idle 18 min — no dial since 2:25 PM. Notified Ben via Google Chat.'},
+ {cls:'coral',t:'2:31 PM',msg:'<b>Spam flag:</b> (917) 555-7311 labeled "Spam Likely" on T-Mobile. Auto-rotated; spare activated. Remediation ticket filed.'},
+ {cls:'amber',t:'2:18 PM',msg:'<b>Abandon rate:</b> NY campaign at 2.4% (cap 3.0%). Parallel lines auto-reduced 3 → 2.'},
+ {cls:'amber',t:'1:55 PM',msg:'<b>Number pacing:</b> (603) 555-7302 at 71/75 daily dials — rotation queued.'},
+ {cls:'teal',t:'1:48 PM',msg:'<b>Speed-to-lead:</b> web lead dialed 38s after submit (LeadConduit → queue-jump) — booked same call.'},
+ {cls:'teal',t:'1:40 PM',msg:'<b>Booked:</b> Sofia R. set a confirmed consult — Cranston RI. 🔔 Salesfloor celebration sent.'},
+ {cls:'teal',t:'1:12 PM',msg:'<b>AI review:</b> Marcus T. flagged best objection-handle of the week — added to team playbook.'}];
+const INTEGRATIONS=[
+ {n:'Salesforce',d:'Pulls dial lists from campaigns, reports & list views (60s sync). Activities + AI summaries written back.',ic:'☁️',bg:'linear-gradient(135deg,#00a1e0,#1798c1)',on:true},
+ {n:'ActiveProspect',d:'LeadConduit real-time lead delivery — new web leads hit the dialer in seconds with TrustedForm consent certificates attached.',ic:'⚡',bg:'linear-gradient(135deg,#2dd4bf,#0ea5e9)',on:true},
+ {n:'Google Chat',d:'Manager alerts, inactivity nudges, and booked-appointment pings to team spaces.',ic:'💬',bg:'linear-gradient(135deg,#34a853,#0f9d58)',on:true},
+ {n:'Google Calendar',d:'Consults auto-scheduled with invites to homeowner + closer.',ic:'📅',bg:'linear-gradient(135deg,#4285f4,#3367d6)',on:true},
+ {n:'CoAdvantage',d:'Dial activity feeds payroll verification — timesheet vs. real activity, automatically.',ic:'🕐',bg:'linear-gradient(135deg,#a78bfa,#7c5cd6)',on:true},
+ {n:'Five9 Import',d:'One-click migration: call history, dispositions, and lead lists from Five9.',ic:'📦',bg:'linear-gradient(135deg,#f5a623,#e08600)',on:false},
+ {n:'HubSpot',d:'Contact + deal sync with timeline events for every call and text.',ic:'🧲',bg:'linear-gradient(135deg,#ff7a59,#e8593a)',on:false},
+ {n:'Slack',d:'Mirror alerts and celebrations to Slack channels.',ic:'#',bg:'linear-gradient(135deg,#611f69,#4a154b)',on:false},
+ {n:'Zapier',d:'6,000+ apps. Trigger zaps on any VentureDial event — no code.',ic:'⚡',bg:'linear-gradient(135deg,#ff4f00,#d94300)',on:false}];
+
+// ---------- STATE ----------
+let view='agent', aiTab='brief', leadIdx=0, callSec=0, callTimer=null, phase='idle';
+let transcriptIdx=0, transcriptTimer=null, lastAnalysis=LEADS[0].lastCall;
+let xp=2480, goals={dials:{v:62,t:80},conn:{v:9,t:12},appt:{v:3,t:5}};
+const AGENT_NAME='Marcus';
+const $=id=>document.getElementById(id);
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
+
+// ---------- GAMIFICATION ----------
+function ring(el,val,target,color){
+ const pct=Math.min(val/target,1),r=30,c=2*Math.PI*r;
+ el.innerHTML=`<svg width="74" height="74"><circle cx="37" cy="37" r="${r}" fill="none" stroke="#1a2133" stroke-width="7"/>
+ <circle cx="37" cy="37" r="${r}" fill="none" stroke="${color}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-pct)}" style="transition:stroke-dashoffset .8s"/></svg>
+ <div class="rv">${val}<span style="color:var(--dim);font-size:10px">/${target}</span></div>`;
+}
+function renderGoals(){
+ ring($('ringDials'),goals.dials.v,goals.dials.t,'#6ea8fe');
+ ring($('ringConn'),goals.conn.v,goals.conn.t,'#2dd4bf');
+ ring($('ringAppt'),goals.appt.v,goals.appt.t,'#ffb02e');
+}
+function addXP(n,x,y){
+ xp+=n;
+ $('xpFill').style.width=Math.min(xp/4000*100,100)+'%';
+ $('xpTxt').textContent=xp.toLocaleString()+' / 4,000 XP · Closer';
+ const f=document.createElement('div');f.className='xpfloat';f.textContent='+'+n+' XP';
+ f.style.left=(x||window.innerWidth/2)+'px';f.style.top=(y||window.innerHeight/2)+'px';
+ document.body.appendChild(f);setTimeout(()=>f.remove(),1600);
+}
+function confetti(){
+ const colors=['#ffb02e','#2dd4bf','#ff6b6b','#a78bfa','#6ea8fe'];
+ for(let i=0;i<90;i++){
+  const c=document.createElement('div');c.className='confetti';
+  c.style.left=Math.random()*100+'vw';
+  c.style.background=colors[i%colors.length];
+  c.style.animationDuration=(Math.random()*1.6+1.4)+'s';
+  c.style.animationDelay=(Math.random()*.5)+'s';
+  c.style.transform='rotate('+Math.random()*360+'deg)';
+  document.body.appendChild(c);setTimeout(()=>c.remove(),3800);
+ }
+}
+
+// ---------- AGENT VIEW ----------
+function renderQueue(){
+ $('qcount').textContent=(LEADS.length-leadIdx)+' queued';
+ const srcline=`<div class="srcline"><span>☁ Salesforce — 3 lists synced · pulls every 60s</span><span>⚡ ActiveProspect LeadConduit — live webhook · TrustedForm on</span></div>`;
+ $('queue').innerHTML=srcline+(LEADS.map((l,i)=>{
+   if(i<leadIdx)return'';
+   const v=VIA[l.name]||['sf','☁ SF'];
+   return `<div class="qitem ${i===leadIdx?'now':''} ${l.submittedAt?'hot':''}">
+   <div class="nm">${l.name} ${l.submittedAt?'<span class="tag amber">⚡ hot</span>':i===leadIdx?'<span class="tag amber">up next</span>':''}</div>
+   <div class="meta">${l.town} · ${l.attempts} attempts · <span class="srct ${v[0]}">${v[1]}</span></div></div>`}).join('')||'<div class="muted small">Queue complete 🎉</div>');
+ $('callbacks').innerHTML=`
+  <div class="cbitem"><div class="t">TODAY 4:00 PM</div><div class="small">Karen Mitchell — consult confirm</div></div>
+  <div class="cbitem"><div class="t">TOMORROW 10:15 AM</div><div class="small">R. Okafor — spouse joining, send invite</div></div>`;
+}
+function renderLead(){
+ const l=LEADS[leadIdx];
+ if(!l){$('leadPane').innerHTML='<div class="muted">Queue complete — great session. 🎉</div>';$('controls').innerHTML='';renderAI();return}
+ const v=VIA[l.name]||['sf','☁ SF'];
+ const stl=l.submittedAt?`<div class="stl">⚡ Web lead submitted <span class="mono" id="stlTimer">0:01</span> ago — dial inside 1:00 for ~8× connect odds</div>`:'';
+ $('leadPane').innerHTML=stl+`<div class="leadcard">
+   <div style="min-width:175px"><div class="name">${l.name}</div><div class="num">${l.phone}</div><div class="small muted">${l.town} · <span class="srct ${v[0]}">${v[1]}</span> ${v[0]==='ap'?'<span class="consent">TrustedForm ✓ consent</span>':''}</div><button class="btn ghost sm" style="margin-top:7px" onclick="openMap()">📍 View home</button></div>
+   <div class="kv"><div class="k">Utility</div><div class="v">${l.utility}</div></div>
+   <div class="kv"><div class="k">Est. bill</div><div class="v">${l.bill}</div></div>
+   <div class="kv"><div class="k">Source</div><div class="v">${l.source}</div></div>
+   <div class="kv"><div class="k">Attempts</div><div class="v">${l.attempts}</div></div>
+   <div class="kv"><div class="k">Team</div><div class="v">${l.team}</div></div></div>`;
+ $('smsLeadName').textContent=l.name;
+ renderControls(); renderAI(); renderSMS();
+}
+function renderControls(){
+ const c=$('controls');const l=LEADS[leadIdx];
+ if(!l){c.innerHTML='';return}
+ if(phase==='idle') c.innerHTML=`<button class="btn amber" onclick="dial()">▸ Dial ${l.name.split(' ')[0]}</button><button class="btn ghost" onclick="skipLead()">Skip</button>`;
+ else if(phase==='ringing') c.innerHTML=`<button class="btn ghost" disabled>Ringing… AMD listening</button><button class="btn coral" onclick="hangup(false)">Cancel</button>`;
+ else if(phase==='live') c.innerHTML=`<button class="btn coral" onclick="hangup(true)">⏹ End Call</button><button class="btn ghost sm" onclick="toast('Muted')">Mute</button><button class="btn ghost sm" onclick="showTransfer()">⇄ Transfer</button><button class="btn ghost sm" onclick="toast('Coach requested — Ben will live-listen')">Request coach</button>`;
+ else if(phase==='wrap') c.innerHTML=`<span class="small muted" style="align-self:center">Pick a disposition to finish wrap-up →</span>`;
+ else if(phase==='done') c.innerHTML=`<button class="btn amber" onclick="nextLead()">▸ Next Call — brief ready</button>`;
+}
+function setState(cls,txt){const s=$('callState');s.className='state '+cls;s.textContent=txt}
+function dial(force){
+ const l=LEADS[leadIdx],st=stateOf(l),r=STATE_RULES[st]||['08:00','21:00',true];
+ if(!force&&!windowOK(st)){
+  $('liveArea').innerHTML=`<div class="alert amber"><div>⏰ <b>Outside ${st} allowed window</b> — ${fmtT(r[0])}–${fmtT(r[1])}${r[2]?'':' · no Sunday'} (lead's local time). Dial auto-deferred to window open. <button class="btn ghost sm" style="margin-left:8px" onclick="dial(true)">Demo: force dial</button></div></div>`;
+  toast('Blocked by '+st+' calling-window rule');return;
+ }
+ phase='ringing';setState('ringing','DIALING');renderControls();
+ goals.dials.v++;renderGoals();
+ $('liveArea').innerHTML=`<div class="muted small"><span class="dot teal"></span> DNC scrub: clear ✓ (federal · state · internal) · ${st} window ${fmtT(r[0])}–${fmtT(r[1])} OK · local-presence CID selected · ring…</div>`;
+ setTimeout(connect,1800);
+}
+function connect(){
+ if(phase!=='ringing')return;
+ phase='live';setState('live','LIVE — REC ●');callSec=0;transcriptIdx=0;
+ goals.conn.v++;renderGoals();
+ callTimer=setInterval(()=>{callSec++;$('timer').textContent=String(Math.floor(callSec/60)).padStart(2,'0')+':'+String(callSec%60).padStart(2,'0')},1000);
+ $('liveArea').innerHTML='<div id="whisperSlot"></div><div class="transcript" id="liveTr"><div class="muted small">Live transcript (recording on)…</div></div>';
+ renderControls();feedTranscript();
+ setTimeout(()=>{
+  const w=$('whisperSlot');
+  if(phase==='live'&&w){
+   w.innerHTML='<div class="alert amber" style="margin-bottom:8px"><div>🗣 <b>Whisper from Ben</b> <span class="muted small">(lead can\'t hear this)</span>: "Nice pace — offer two specific times, not an open question."</div></div>';
+   toast('🗣 Manager whisper — only you hear it');
+  }
+ },9000);
+}
+function feedTranscript(){
+ const l=LEADS[leadIdx];if(!l)return;
+ transcriptTimer=setInterval(()=>{
+  if(transcriptIdx>=l.script.length){clearInterval(transcriptTimer);return}
+  const pair=l.script[transcriptIdx++];
+  const tr=$('liveTr');if(!tr){clearInterval(transcriptTimer);return}
+  tr.innerHTML+=`<div class="ln"><span class="who ${pair[0]}">${pair[0]==='agent'?'YOU':'LEAD'}</span>${pair[1].replace('{AGENT}',AGENT_NAME)}</div>`;
+  tr.scrollTop=tr.scrollHeight;
+ },2200);
+}
+function hangup(wasLive){
+ clearInterval(callTimer);clearInterval(transcriptTimer);
+ if(!wasLive){phase='idle';setState('idle','READY');$('timer').textContent='00:00';renderControls();$('liveArea').innerHTML='';return}
+ phase='wrap';setState('wrap','WRAP-UP');renderControls();
+ $('liveArea').innerHTML='<div class="muted small">⏳ AI analyzing recording…</div>';
+ setTimeout(()=>{
+  const l=LEADS[leadIdx];
+  lastAnalysis=buildAnalysis(l);
+  l.lastCall=lastAnalysis;
+  $('liveArea').innerHTML=`<div class="aiblock" style="margin-bottom:10px"><div class="lbl">AI wrap-up — summary auto-logged to CRM</div>
+   <ul>${lastAnalysis.summary.map(s=>'<li>'+s+'</li>').join('')}</ul></div>
+   <div class="dispo">
+    <button class="ai" onclick="dispo('${lastAnalysis.aiDispo}')">${lastAnalysis.aiDispo}</button>
+    ${DISPO_SETS[CURRENT_ROLE_TYPE].map(d=>`<button onclick="dispo('${d}')">${d}</button>`).join('')}</div>
+   <div class="compliance" style="margin-top:6px">disposition set: "${CURRENT_ROLE_TYPE}" — customized per user type in Ops</div>`;
+  setAITab('analysis');
+ },1400);
+}
+function buildAnalysis(l){
+ if(l.name==='Karen Mitchell')return{summary:['Roof-age objection resolved (12 yrs, qualifies).','Virtual consult booked: Thu 4:00 PM — calendar invite queued.','Bill confirmed ~$280/mo Eversource.'],objection:'In-home visit resistance → resolved with virtual option.',coach:'Talk ratio improved to 54% (was 71%). You paused after the roof answer — that closed it.',sentiment:'Positive',talk:54,nextStep:'Send confirm SMS + invite now',aiDispo:'Appt booked ✓'};
+ if(l.name==='Derek Alvarez')return{summary:['First live connect after 3 attempts — after-5pm window validated.','Wants savings numbers by SMS before committing.','Con Ed +9.2% hook landed well.'],objection:'Timing — wants numbers first. Follow the SMS ask.',coach:'You matched his pace ("two minutes") instead of fighting it. Do that again.',sentiment:'Warming',talk:48,nextStep:'Text estimate within 10 min while warm',aiDispo:'Send estimate ✓'};
+ if(l.name==='Priya Raman')return{summary:['Referral intro landed; brother\'s 38% savings cited.','Open to virtual consult — asked for available times.'],objection:'None — gather times and book.',coach:'Great warm open. Offer two specific slots, not an open question.',sentiment:'Positive',talk:51,nextStep:'Offer Thu 11am / Fri 2pm',aiDispo:'Appt booked ✓'};
+ if(l.name==='Brianna Foster')return{summary:['Speed-to-lead win: connected '+(l.submittedAt?Math.floor((Date.now()-l.submittedAt)/1000)+'s':'<60s')+' after form submit.','Consult booked same call: today 5:30 PM.','TrustedForm consent verified pre-dial.'],objection:'None — momentum carried the booking.',coach:'Textbook speed-to-lead. Offering two concrete slots sealed it.',sentiment:'Positive',talk:49,nextStep:'Send confirm SMS + calendar invite now',aiDispo:'Appt booked ✓'};
+ if(l.name==='Tom Gallagher')return{summary:['Connected; spouse Mary is decision-maker.','Joint appointment proposed for Saturday 10 AM.'],objection:'Spouse must be present — book jointly.',coach:'You asked for the joint slot before pitching. Textbook.',sentiment:'Positive',talk:46,nextStep:'Confirm Sat 10am by SMS to both',aiDispo:'Appt booked ✓'};
+ if(l.name==='Greg Hanley')return{summary:['Inbound via NH Sales Line (Google Ads "solar cost NH") — answered in 2 rings.','New prospect auto-created in Salesforce with full source attribution.','Consult booked: Thursday 6:00 PM.'],objection:'Cost curiosity — wants real numbers, not a pitch.',coach:'You localized instantly ("Derry installs") — do that on every inbound.',sentiment:'Positive',talk:47,nextStep:'Send confirm SMS + calendar invite',aiDispo:'Appt booked ✓'};
+ return{summary:['Call completed; transcript and recording stored.','Summary auto-logged to CRM.'],objection:'—',coach:'Solid call. Review the AI scorecard for details.',sentiment:'Neutral',talk:50,nextStep:'Schedule follow-up',aiDispo:'Callback set'};
+}
+function dispo(d){
+ phase='done';setState('idle','LOGGED');renderControls();
+ const booked=d.includes('Appt');
+ $('liveArea').innerHTML=`<div class="alert teal" style="margin-top:4px"><div><b>${d}</b> — recording, transcript & AI summary saved to CRM.${booked?' Salesfloor 🔔 celebration sent. Calendar invite out.':''}</div></div>`;
+ if(booked){goals.appt.v++;renderGoals();confetti();addXP(150);toast('🎉 Appointment booked! +150 XP');}
+ else{addXP(25);toast('Disposition logged: '+d+' · +25 XP');}
+ $('timer').textContent='00:00';
+}
+function skipLead(){nextLead()}
+function nextLead(){
+ leadIdx++;phase='idle';setState('idle','READY');
+ setAITab('brief');renderQueue();renderLead();
+ $('liveArea').innerHTML='';
+ if(LEADS[leadIdx])toast('Pre-call brief ready for '+LEADS[leadIdx].name);
+}
+function setAITab(t){
+ aiTab=t;$('tabBrief').className=t==='brief'?'on':'';$('tabScript').className=t==='script'?'on':'';$('tabAnalysis').className=t==='analysis'?'on':'';renderAI();
+}
+// ---------- TRANSFERS ----------
+function showTransfer(){
+ const w=$('whisperSlot');if(!w)return;
+ w.innerHTML=`<div class="aiblock" style="border:1px solid rgba(255,176,46,.45);margin-bottom:8px">
+  <div class="lbl">Transfer — warm (you stay until you drop) or blind</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap">
+   <button class="btn ghost sm" onclick="doTransfer('warm','Sofia R.')">Sofia R. (closer)</button>
+   <button class="btn ghost sm" onclick="doTransfer('warm','Team Ben queue')">Team Ben</button>
+   <button class="btn ghost sm" onclick="doTransfer('warm','Team Joseph queue')">Team Joseph</button>
+   <button class="btn ghost sm" onclick="doTransfer('warm','CX / Customer Care')">CX dept</button>
+   <button class="btn ghost sm" onclick="doTransfer('blind','Manager (Ben)')">Manager</button>
+   <button class="btn ghost sm" onclick="this.closest('.aiblock').remove()">✕ cancel</button>
+  </div></div>`;
+}
+function doTransfer(kind,who){
+ toast((kind==='warm'?'Warm transfer — '+who+' joining; introduce, then drop':'Transferred to '+who)+' · context card + transcript follow the call');
+ const w=$('whisperSlot');if(w)w.innerHTML='';
+}
+// ---------- STATE SCRIPTS ----------
+const SCRIPTS={
+ NH:`OPEN: Hi {firstName}, this is {agent} with Venture Home Solar — calling about your home in {town}.\nHOOK: Eversource rates are up 11% this year. Most {town} homeowners around {bill} qualify for real savings.\nVALUE: NH net metering plus the 30% federal credit still apply this year.\nASK: It starts with a 20-minute virtual consult — no site visit. Is morning or evening better?\nDISCLOSURE: This call is recorded. We're a solar installer, not your utility.`,
+ NY:`OPEN: Hi {firstName}, this is {agent} with Venture Home Solar about your home in {town}.\nHOOK: Con Ed's 9.2% increase was just approved — your {bill} bill is heading up.\nVALUE: NY-Sun incentives + 25% state tax credit stack with the 30% federal credit.\nASK: 20-minute virtual consult — we run your exact numbers. Morning or evening?\nDISCLOSURE: This call is recorded. We're a solar installer, not your utility.`,
+ RI:`OPEN: Hi {firstName}, this is {agent} with Venture Home Solar about your home in {town}.\nHOOK: RI Energy's rates put your {bill} bill among the highest in New England.\nVALUE: RI's REG program locks a fixed credit rate for 20 years — strong payback.\nASK: 20-minute virtual consult, no site visit. What works this week?\nDISCLOSURE: This call is recorded. RI calling window is 9am–6pm, Mon–Sat — auto-enforced.`,
+ DEFAULT:`OPEN: Hi {firstName}, this is {agent} with Venture Home Solar — calling about your home in {town}.\nHOOK: {utility} rates keep climbing — you're around {bill} today.\nVALUE: The 30% federal credit applies this year; state incentives vary — I'll pull yours.\nASK: 20-minute virtual consult — no site visit. Morning or evening better?\nDISCLOSURE: This call is recorded.`};
+function loadScript(){const s=$('scrState').value;$('scrText').value=SCRIPTS[s]||SCRIPTS.DEFAULT;}
+function saveScript(){const s=$('scrState').value;SCRIPTS[s]=$('scrText').value;toast('✓ '+s+' script saved — live on all agent screens');if(aiTab==='script')renderAI();}
+function populatedScript(l){
+ const st=stateOf(l);
+ const t=SCRIPTS[st]||SCRIPTS.DEFAULT;
+ return t.replace(/{firstName}/g,l.name.split(' ')[0]).replace(/{town}/g,l.town.split(',')[0]).replace(/{utility}/g,l.utility).replace(/{bill}/g,l.bill).replace(/{agent}/g,AGENT_NAME);
+}
+function renderAI(){
+ const l=LEADS[leadIdx],p=$('aiPane');
+ if(!l){p.innerHTML='<div class="muted small">Session complete.</div>';return}
+ if(aiTab==='brief'){
+  const a=l.lastCall;
+  p.innerHTML=`<div class="aiblock"><div class="lbl">Why this lead now</div><ul>${l.brief.map(b=>'<li>'+b+'</li>').join('')}</ul></div>`+
+  (a?`<div class="aiblock coach"><div class="lbl">From your last interaction</div><div class="small"><b>Objection:</b> ${a.objection}<br><b>Coach:</b> ${a.coach}</div></div>`:'<div class="aiblock coach"><div class="lbl">First touch</div><div class="small">No prior calls — referral warm open recommended.</div></div>');
+ }else if(aiTab==='script'){
+  const st=stateOf(l);
+  p.innerHTML=`<div class="small muted" style="margin-bottom:8px">Auto-populated for <span class="tag amber">${st}</span> with ${l.name.split(' ')[0]}'s data — managed in Ops portal</div>`+
+   populatedScript(l).split('\n').map(line=>{
+    const i=line.indexOf(':');const lbl=line.slice(0,i);const txt=line.slice(i+1).trim();
+    return `<div class="aiblock ${lbl==='DISCLOSURE'?'coach':''}"><div class="lbl">${lbl}</div><div class="small">${txt}</div></div>`;
+   }).join('');
+ }else{
+  const a=lastAnalysis;
+  if(!a){p.innerHTML='<div class="muted small">No completed calls yet this session.</div>';return}
+  p.innerHTML=`<div class="senti" style="margin-bottom:9px">
+    <div class="pill"><div class="bignum" style="color:var(--teal)">${a.sentiment}</div><div class="cap">Sentiment</div></div>
+    <div class="pill"><div class="bignum">${a.talk}%</div><div class="cap">Talk ratio</div></div>
+    <div class="pill"><div class="bignum" style="color:var(--amber)">A-</div><div class="cap">AI score</div></div></div>
+   <div class="aiblock"><div class="lbl">Summary (auto-logged)</div><ul>${a.summary.map(s=>'<li>'+s+'</li>').join('')}</ul></div>
+   <div class="aiblock coach"><div class="lbl">Coaching</div><div class="small">${a.coach}</div></div>
+   <div class="aiblock"><div class="lbl">Recommended next step</div><div class="small mono" style="color:var(--amber)">${a.nextStep}</div></div>`;
+ }
+}
+// ---------- SMS ----------
+function renderSMS(){
+ const l=LEADS[leadIdx];const th=$('smsThread');
+ if(!l){th.innerHTML='';return}
+ const msgs=SMS_INIT[l.name]||[];
+ th.innerHTML=msgs.length?msgs.map(m=>`<div class="msg ${m.dir}">${m.txt}<div class="mt">${m.t}</div></div>`).join(''):'<div class="muted small" style="text-align:center;padding:30px 0">No messages yet</div>';
+ th.scrollTop=th.scrollHeight;
+ $('smsTmpls').innerHTML=TEMPLATES.map(t=>`<button onclick="useTmpl(this.textContent)">${t}</button>`).join('');
+}
+function useTmpl(t){$('smsInput').value=t}
+function sendSMS(){
+ const l=LEADS[leadIdx];const inp=$('smsInput');const v=inp.value.trim();if(!v||!l)return;
+ const t=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+ (SMS_INIT[l.name]=SMS_INIT[l.name]||[]).push({dir:'out',txt:v,t});
+ inp.value='';renderSMS();addXP(10);
+ if((SMS_INIT[l.name].filter(m=>m.dir==='in').length)<2){
+  setTimeout(()=>{SMS_INIT[l.name].push({dir:'in',txt:l.name==='Karen Mitchell'?'Got it, see you Thursday at 4! 👍':'Sounds good, thanks',t:new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})});renderSMS();toast('SMS reply from '+l.name)},3500);
+ }
+}
+// ---------- MANAGER VIEW ----------
+function renderMgr(){
+ const onCall=AGENTS.filter(a=>a.status==='oncall').length;
+ const inactive=AGENTS.filter(a=>a.status==='idle'&&a.idleMin>=15).length;
+ $('kpis').innerHTML=`
+  <div class="kpi good"><div class="v">13.4%</div><div class="l">Answer rate (today)</div></div>
+  <div class="kpi good"><div class="v">${onCall}/25</div><div class="l">Agents on calls</div></div>
+  <div class="kpi warn"><div class="v">2.4%</div><div class="l">Abandon · cap 3.0%</div></div>
+  <div class="kpi ${inactive?'bad':'good'}"><div class="v">${inactive}</div><div class="l">Inactive 15+ min</div></div>
+  <div class="kpi good"><div class="v">41s</div><div class="l">Median speed-to-lead</div></div>
+  <div class="kpi good"><div class="v">31</div><div class="l">Appts booked today</div></div>`;
+ $('floorSummary').textContent=`${onCall} on call · ${AGENTS.filter(a=>a.status==='wrap').length} wrap-up · ${inactive} flagged inactive`;
+ $('floor').innerHTML=AGENTS.map(a=>{
+  const flag=a.status==='idle'&&a.idleMin>=15;
+  const stTxt={oncall:'● on call',wrap:'wrap-up',idle:'idle '+a.idleMin+'m',break:'break '+a.idleMin+'m'}[a.status];
+  const dotc=flag?'coral':a.status==='oncall'?'teal':'amber';
+  return `<div class="agentcell ${flag?'flagged':a.status==='oncall'?'oncall':''}">
+   <div class="an"><span class="dot ${dotc}"></span>${a.n}</div>
+   <div class="st">${stTxt} · ${a.team} · ${a.callsToday}d · AI ${a.aiScore}${a.status==='oncall'?' · '+a.sent:''}</div>
+   <div class="acts">${a.status==='oncall'?`<button onclick="openMonitor(${a.id},'listen')">👂 listen</button><button onclick="openMonitor(${a.id},'whisper')">whisper</button><button onclick="openMonitor(${a.id},'barge')">barge</button>`:''}${flag?`<button style="color:var(--coral);border-color:var(--coral)" onclick="toast('Nudge sent to ${a.n} via Google Chat')">nudge</button>`:''}</div></div>`;
+ }).join('');
+ $('numTable').innerHTML=NUMBERS.map(n=>{
+  const tag={clean:'<span class="tag teal">clean</span>','rotate-soon':'<span class="tag amber">rotate soon</span>',flagged:'<span class="tag coral">spam-flagged → rotated out</span>',quarantine:'<span class="tag coral">quarantine · remediating</span>',spare:'<span class="tag amber">spare · ready</span>'}[n.st];
+  return `<tr><td>${n.num}</td><td>${n.area}</td><td>${n.dials}/75</td><td>${n.ans}</td><td>${tag}</td></tr>`}).join('');
+ $('alertFeed').innerHTML=ALERTS.map(a=>`<div class="alert ${a.cls}"><div class="at">${a.t}</div><div>${a.msg}</div></div>`).join('');
+ $('lbTable').innerHTML=[...AGENTS].sort((x,y)=>y.appts-x.appts).slice(0,8).map((a,i)=>`<tr><td>${i===0?'🏆 ':i===1?'🥈 ':i===2?'🥉 ':''}${a.n}</td><td>${a.appts}</td><td>${a.connect}%</td></tr>`).join('');
+ $('lbCalls').innerHTML=[...AGENTS].sort((x,y)=>y.callsToday-x.callsToday).slice(0,8).map((a,i)=>`<tr><td>${i===0?'📞 ':''}${a.n}</td><td>${a.callsToday}</td><td>${a.team}</td></tr>`).join('');
+ $('perfTable').innerHTML=[...AGENTS].sort((x,y)=>y.aiScore-x.aiScore).map(a=>{
+  const low=a.aiScore<74||a.trend<-2,top=a.aiScore>=90;
+  const sentCol=a.sent==='Tense'?'var(--coral)':a.sent==='Positive'?'var(--teal)':'var(--text)';
+  return `<tr style="${low?'background:rgba(255,107,107,.06)':''}">
+   <td style="font-family:var(--ui);font-weight:600">${top?'⭐ ':''}${a.n}${low?' <span class="tag coral">below baseline</span>':''}</td>
+   <td>${a.callsToday}</td><td>${a.connect}%</td><td>${a.appts}</td><td>${a.aiScore}</td>
+   <td style="color:${sentCol}">${a.status==='oncall'?a.sent:'—'}</td>
+   <td style="color:${a.trend>=0?'var(--teal)':'var(--coral)'}">${a.trend>=0?'▲':'▼'} ${Math.abs(a.trend).toFixed(1)}%</td>
+   <td>${a.status==='oncall'?`<button class="btn ghost sm" onclick="openMonitor(${a.id},'listen')">listen</button>`:''}</td></tr>`}).join('');
+}
+// ---------- LIVE LISTEN MONITOR ----------
+const MON_SCRIPT=[
+ ['lead','…so the quote we got last year was way more than we expected.'],
+ ['agent','Totally fair — pricing dropped a lot since then, and the federal credit still applies this year.'],
+ ['lead','Hm. And what happens when it snows? We get hammered up here.'],
+ ['agent','Panels are angled so snow slides off, and production is modeled with winter factored in — you only pay for what we project.'],
+ ['lead','Okay… what would the next step even look like?'],
+ ['agent','A 20-minute virtual consult — we pull up your roof on satellite and run your actual bill. No site visit, no pressure.'],
+ ['lead','Alright, I could do Friday morning.'],
+ ['agent','Friday morning works — let me grab that slot for you now.']];
+let monTimer=null,monDurTimer=null,monIdx=0,monSec=192,monMode='listen',monAgent=null;
+function openMonitor(id,mode){
+ monAgent=AGENTS[id];monIdx=0;monSec=Math.floor(Math.random()*240)+60;
+ $('monName').textContent=monAgent.n;
+ $('monLead').textContent='on call · prospect in '+(monAgent.team==='Ben'?'Manchester, NH':'Albany, NY')+' · '+monAgent.team+'’s team';
+ $('monTr').innerHTML='<div class="muted small">Joining live audio…</div>';
+ $('monWave').innerHTML=Array.from({length:36},(_,i)=>`<i style="animation-delay:${(i*73)%900}ms;animation-duration:${700+(i*37)%500}ms"></i>`).join('');
+ $('monitor').classList.add('open');
+ setMonMode(mode||'listen');
+ clearInterval(monTimer);clearInterval(monDurTimer);
+ monDurTimer=setInterval(()=>{monSec++;$('monDur').textContent=String(Math.floor(monSec/60)).padStart(2,'0')+':'+String(monSec%60).padStart(2,'0')},1000);
+ monTimer=setInterval(()=>{
+  if(monIdx>=MON_SCRIPT.length){clearInterval(monTimer);return}
+  const pair=MON_SCRIPT[monIdx++];
+  const tr=$('monTr');
+  if(monIdx===1)tr.innerHTML='';
+  tr.innerHTML+=`<div class="ln" style="margin-bottom:8px;line-height:1.45"><span class="who ${pair[0]}" style="font-family:var(--mono);font-size:10px;font-weight:700;margin-right:6px">${pair[0]==='agent'?monAgent.n.split(' ')[0].toUpperCase():'LEAD'}</span>${pair[1]}</div>`;
+  tr.scrollTop=tr.scrollHeight;
+  const sents=['Neutral','Curious','Warming','Positive'];
+  $('monSent').textContent=sents[Math.min(Math.floor(monIdx/2),3)];
+  $('monTalk').textContent=(48+(monIdx%3)*3)+'%';
+ },2400);
+}
+function setMonMode(m){
+ monMode=m;
+ $('mListen').className='m-listen'+(m==='listen'?' on':'');
+ $('mWhisper').className='m-whisper'+(m==='whisper'?' on':'');
+ $('mBarge').className='m-barge'+(m==='barge'?' on':'');
+ const b=$('monBanner');
+ if(m==='listen'){b.style.background='var(--teal-bg)';b.style.color='var(--teal)';b.textContent='👂 Silent monitoring — neither agent nor lead can hear you.'}
+ if(m==='whisper'){b.style.background='var(--amber-bg)';b.style.color='var(--amber)';b.textContent='🗣 Whisper mode — only '+(monAgent?monAgent.n:'the agent')+' hears you. Lead hears nothing.'}
+ if(m==='barge'){b.style.background='var(--coral-bg)';b.style.color='var(--coral)';b.textContent='⚡ Barged in — you are live on the call with both parties.'}
+ if(monAgent)toast({listen:'Listening to '+monAgent.n,whisper:'Whisper open to '+monAgent.n,barge:'You are live on '+monAgent.n+'’s call'}[m]);
+}
+function closeMonitor(){
+ $('monitor').classList.remove('open');
+ clearInterval(monTimer);clearInterval(monDurTimer);
+}
+// ---------- INTEGRATIONS ----------
+function renderInt(){
+ $('intGrid').innerHTML=INTEGRATIONS.map((it,i)=>`<div class="inttile">
+  <div class="ic" style="background:${it.bg}">${it.ic}</div>
+  <div class="in">${it.n}</div><div class="id">${it.d}</div>
+  <div class="introw">${it.on?'<span class="tag teal">● connected</span><span class="spacer"></span><button class="btn ghost sm" onclick="toggleInt('+i+')">Manage</button>':'<button class="btn amber sm" onclick="toggleInt('+i+')">Connect in 1 click</button>'}</div></div>`).join('');
+ $('intCount').textContent=INTEGRATIONS.filter(x=>x.on).length;
+}
+function toggleInt(i){
+ const it=INTEGRATIONS[i];
+ if(!it.on){it.on=true;toast('✓ '+it.n+' connected via OAuth — syncing now');confetti();}
+ else toast(it.n+' settings opened');
+ renderInt();
+}
+// ---------- MAP POPUP ----------
+function openMap(){
+ const l=LEADS[leadIdx];if(!l)return;
+ const a=ADDR[l.name]||l.town;
+ $('mapAddr').textContent=a+' — '+l.name;
+ $('mapLink').href='https://maps.google.com/?q='+encodeURIComponent(a);
+ // live Google satellite embed (t=k). Demo addresses are fictional — production uses the CRM's verified address.
+ $('mapFrame').src='https://maps.google.com/maps?q='+encodeURIComponent(a)+'&t=k&z=20&output=embed';
+ $('mapModal').classList.add('open');
+}
+function closeMap(){$('mapModal').classList.remove('open')}
+// ---------- INBOUND RING GROUP ----------
+let inboundFired=false;
+function simulateInbound(){
+ if($('inboundPop'))return;
+ const p=document.createElement('div');p.id='inboundPop';
+ p.innerHTML=`<div class="ih"><span class="ringanim">📞</span> Incoming — NH Sales Line</div>
+  <div class="small" style="margin-bottom:4px"><span class="srct in">📞 Google Ads — "solar cost NH"</span> <span class="srct sf">team: Ben · simultaneous ring</span></div>
+  <div style="font-weight:700;font-size:15px;margin:7px 0 2px">Greg Hanley <span class="muted small">(no CRM match — new prospect)</span></div>
+  <div class="small muted">Derry, NH · clicked ad 2 min ago · DNC clear ✓</div>
+  <div style="display:flex;gap:8px;margin-top:12px"><button class="btn teal" style="flex:1" onclick="answerInbound()">Answer</button><button class="btn ghost" onclick="declineInbound()">Pass</button></div>`;
+ document.body.appendChild(p);
+}
+function answerInbound(){
+ const p=$('inboundPop');if(p)p.remove();
+ if(!LEADS.includes(INBOUND))LEADS.splice(leadIdx,0,INBOUND);
+ renderQueue();renderLead();
+ phase='ringing';
+ toast('📞 Inbound answered — source: Google Ads · NH Sales Line');
+ connect();
+}
+function declineInbound(){
+ const p=$('inboundPop');if(p)p.remove();
+ toast('Passed — ringing next agent in Team Ben group');
+}
+// ---------- SHELL ----------
+let mode=null;
+const VIEW_IDS={agent:'agentView',mgr:'mgrView',cx:'cxView',ops:'opsView',int:'intView'};
+function setView(v){
+ view=v;
+ Object.values(VIEW_IDS).forEach(id=>{$(id).style.display='none'});
+ $(VIEW_IDS[v]).style.display='';
+ document.querySelectorAll('#roleTabs button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+ if(v==='mgr')renderMgr();
+ if(v==='int')renderInt();
+}
+function setMode(m){
+ mode=m;$('launcher').style.display='none';
+ const tabs={mgr:[['mgr','Salesfloor'],['cx','CX'],['ops','Operations'],['int','Integrations']],
+             cx:[['cx','CX Inbox'],['mgr','Salesfloor'],['int','Integrations']],
+             ops:[['ops','Operations'],['mgr','Salesfloor'],['int','Integrations']]};
+ if(m==='agent'){
+  $('roleTabs').innerHTML='';
+  $('xpwrap').style.display='flex';
+  $('roleLabel').innerHTML='🎧 <b>Agent Workspace</b>&nbsp;· switch';
+  setView('agent');
+ }else{
+  $('xpwrap').style.display='none';
+  $('roleTabs').innerHTML=tabs[m].map(x=>`<button data-v="${x[0]}" onclick="setView('${x[0]}')">${x[1]}</button>`).join('');
+  $('roleLabel').innerHTML=(m==='mgr'?'🛡 <b>Manager Portal</b>':m==='cx'?'💬 <b>CX Portal</b>':'⚙️ <b>Ops Portal</b>')+'&nbsp;· switch';
+  setView(tabs[m][0][0]);
+ }
+}
+function openLauncher(){$('launcher').style.display='grid'}
+setInterval(()=>{
+ $('clock').textContent=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit',second:'2-digit'});
+ const st=$('stlTimer');
+ if(st&&HOT_LEAD.submittedAt){const s=Math.floor((Date.now()-HOT_LEAD.submittedAt)/1000);st.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+},1000);
+// LeadConduit webhook simulation — hot lead jumps the queue
+setTimeout(()=>{
+ if(LEADS.includes(HOT_LEAD))return;
+ HOT_LEAD.submittedAt=Date.now();
+ const pos=phase==='idle'?leadIdx:leadIdx+1;
+ LEADS.splice(pos,0,HOT_LEAD);
+ renderQueue();
+ if(phase==='idle'){renderLead();}
+ toast('⚡ New web lead via LeadConduit — Brianna Foster jumped the queue. Beat the clock!');
+},15000);
+setInterval(()=>{
+ AGENTS.forEach(a=>{if(a.status==='idle'||a.status==='break')a.idleMin++});
+ AGENTS.forEach(a=>{
+  if(a.status==='oncall'&&Math.random()<.3)a.sent=SENTS[Math.floor(Math.random()*4)];
+  if(Math.random()<.2)a.aiScore=Math.max(65,Math.min(97,a.aiScore+(Math.random()<.5?-1:1)));
+ });
+ const a15=AGENTS[15];
+ if(a15.status==='idle'&&a15.idleMin>=25){a15.status='oncall';a15.idleMin=0;
+  ALERTS.unshift({cls:'teal',t:new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}),msg:'<b>Resolved:</b> Nina V. back on the dialer after nudge.'});}
+ if(view==='mgr')renderMgr();
+},5000);
+// inbound call arrives ~40s after entering agent workspace (when idle)
+let agentModeAt=null;
+const _origSetMode=setMode;
+setMode=function(m){if(m==='agent'&&!agentModeAt)agentModeAt=Date.now();_origSetMode(m)};
+setInterval(()=>{
+ if(!inboundFired&&mode==='agent'&&phase==='idle'&&agentModeAt&&Date.now()-agentModeAt>40000){inboundFired=true;simulateInbound();}
+},4000);
+// ---------- HELP TOOL ----------
+const HELP=[
+ {c:'Getting started',q:'How do I make my first call?',a:'In the Agent Workspace, your queue is on the left — sources sync automatically from Salesforce lists and LeadConduit. Hit the amber "Dial" button. The system runs a DNC scrub and calling-window check, picks a local-presence caller ID, and rings. Everything is recorded automatically.',v:['agent']},
+ {c:'Getting started',q:'What do the colors mean?',a:'Teal = positive/approved (clean numbers, booked appointments). Amber = pending/action needed (hot leads, rotation warnings). Coral = flagged (inactive agents, spam-flagged numbers, tense calls).',v:['agent','mgr','cx','ops']},
+ {c:'Agent',q:'Where do I see AI feedback on my last call?',a:'AI Copilot panel → Analysis tab. After every call the AI scores it, summarizes it (auto-logged to Salesforce), flags the objection, and gives one coaching tip. The Brief tab folds that feedback into your prep for the NEXT call automatically.',v:['agent']},
+ {c:'Agent',q:'How do scripts work?',a:'AI Copilot → Script tab. The script auto-selects based on the lead\'s state (NY leads get Con Ed + NY-Sun talking points, etc.) and fills in their name, utility, and bill. Scripts are written by your admin in the Ops portal.',v:['agent']},
+ {c:'Agent',q:'How do I text a lead?',a:'The SMS panel sits under the AI Copilot. Type or tap a template. Compliance is handled: 10DLC-registered numbers, STOP auto-processed, opt-out language appended.',v:['agent']},
+ {c:'Agent',q:'What is the hot lead banner?',a:'When someone submits a web form, LeadConduit pushes them into your queue within seconds and they jump to the front with a timer. Dial inside a minute — contact odds drop ~8× after 5 minutes.',v:['agent']},
+ {c:'Agent',q:'How do XP, streaks and badges work?',a:'+25 XP per disposed call, +150 per booked appointment, +10 per SMS. Daily goal rings track dials/connects/appts. Book at least one appointment a day to keep your streak. Team Battle pits Ben\'s team vs Joseph\'s for the monthly prize.',v:['agent']},
+ {c:'Agent',q:'What does "View home" show?',a:'An aerial view of the lead\'s address with roof orientation, sun score, and estimated system size — plus a link to open the real address in Google Maps.',v:['agent']},
+ {c:'Manager',q:'How do I listen to a live call?',a:'Salesfloor → click "listen" on any on-call agent (or from Performance Pulse / Coaching Feed). A live monitor opens with streaming transcript and sentiment. Escalate anytime: Listen (silent) → Whisper (only your agent hears you) → Barge (you join the call).',v:['mgr']},
+ {c:'Manager',q:'How does whisper work?',a:'In the live monitor, click Whisper. Your audio goes only to the agent\'s headset — the lead hears nothing. The agent sees an amber whisper bar on screen. Use it for mid-call coaching without breaking the conversation.',v:['mgr']},
+ {c:'Manager',q:'How do inactivity alerts work?',a:'Any agent idle 15+ minutes is flagged coral on the salesfloor, raised in the Alerts feed, and pushed to Google Chat. Click "nudge" to ping them directly.',v:['mgr']},
+ {c:'Manager',q:'What is Performance Pulse?',a:'A live table of every agent: dials, connect %, appointments, AI call score, current-call sentiment, and trend vs their own 7-day baseline. Below-baseline reps are auto-flagged; the AI Coaching Feed suggests the next action (whisper in, send tip, assign roleplay).',v:['mgr']},
+ {c:'CX',q:'What lands in the Unified Inbox?',a:'Every customer voice call and SMS from the Customer Care ring group, sorted by urgency. Opening a thread shows full history: calls, recordings, AI summaries, texts, install stage, and open tickets.',v:['cx']},
+ {c:'Ops',q:'How do ring groups route inbound calls?',a:'Each inbound number carries a source tag (Google Ads, Facebook, website). Calls ring the assigned team (simultaneous, round-robin, or longest-idle). Agents see the ring group AND lead source on the screen-pop, and attribution writes to Salesforce.',v:['ops','mgr']},
+ {c:'Ops',q:'How is DNC handled?',a:'Three layers: federal + state registries scrubbed nightly (re-scrub every 31 days), real-time pre-dial check on every call, and an internal DNC list synced to Salesforce. List imports are scrubbed on arrival. Leads with TrustedForm consent are callable under the written-consent exemption.',v:['ops','agent']},
+ {c:'Ops',q:'How do I set calling hours per state?',a:'Ops portal → Compliance Center → Allowable calling hours. Set From/Until per state and the Sunday toggle, then Save & enforce. The dialer blocks and auto-defers any dial outside the lead\'s local window.',v:['ops']},
+ {c:'Ops',q:'How do I edit scripts?',a:'Ops portal → State Scripts. Pick a state, edit with merge fields like {firstName} and {bill}, save — it goes live on agent screens instantly and populates with each lead\'s real data.',v:['ops']},
+ {c:'Integrations',q:'How do I connect Salesforce or other tools?',a:'Integrations tab → Connect in 1 click (OAuth). Salesforce pulls dial lists from campaigns/list views every 60s and receives activities + AI summaries back. ActiveProspect delivers web leads in real time. Anything else: Zapier or the webhook API.',v:['int']}
+];
+function toggleHelp(){$('helpPanel').classList.toggle('open')}
+function renderHelp(){
+ const f=($('helpSearch').value||'').toLowerCase();
+ let items=HELP.filter(h=>!f||h.q.toLowerCase().includes(f)||h.a.toLowerCase().includes(f)||h.c.toLowerCase().includes(f));
+ const here=items.filter(h=>h.v.includes(view)),rest=items.filter(h=>!h.v.includes(view));
+ const block=(t,arr)=>arr.length?`<div class="hcat">${t}</div>`+arr.map(h=>`<div class="hitem" onclick="this.classList.toggle('open')"><div class="hq">▸ ${h.q}</div><div class="ha">${h.a}</div></div>`).join(''):'';
+ let html=block('📍 On this screen',here);
+ const cats=[...new Set(rest.map(h=>h.c))];
+ cats.forEach(c=>{html+=block(c,rest.filter(h=>h.c===c))});
+ $('helpBody').innerHTML=html||'<div class="muted small" style="padding:20px 0;text-align:center">No matches — try the Ask AI box below.</div>';
+}
+function askHelp(){
+ const q=($('haq').value||'').toLowerCase();if(!q)return;
+ let best=null,score=0;
+ HELP.forEach(h=>{let s=0;q.split(/\s+/).forEach(w=>{if(w.length>2&&(h.q.toLowerCase().includes(w)||h.a.toLowerCase().includes(w)))s++});if(s>score){score=s;best=h}});
+ const a=$('haians');a.style.display='block';
+ a.innerHTML=best&&score>0?`<b>AI:</b> ${best.a}`:`<b>AI:</b> I don't have that one yet — in production this searches docs + asks Claude. Try keywords like "whisper", "DNC", "ring groups", or "scripts".`;
+ $('haq').value='';
+}
+renderHelp();
+renderQueue();renderLead();renderGoals();renderStateRules();loadScript();
+</script>
+</body>
+</html>
